@@ -53,6 +53,20 @@ if (state)
   lcd.print("State = ");
   lcd.println(state);
 
+
+bool motor_1_terminal_1,motor_1_terminal_2,motor_2_terminal_1,motor_2_terminal_2;
+short motor_1_speed,motor_2_speed;
+
+get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, x_axis, y_axis,state);
+
+  lcd.print("\nR = ");
+  lcd.print(motor_1_terminal_1);  lcd.print(", ");
+    lcd.print(motor_1_terminal_2);    lcd.print(", ");lcd.println(motor_1_speed); 
+      lcd.print("L = ");
+  lcd.print(motor_2_terminal_1);  lcd.print(", ");
+    lcd.print(motor_2_terminal_2);    lcd.print(", ");lcd.print(motor_2_speed);
+
+
   lcd.display();
   delay(10);
   lcd.clearDisplay();

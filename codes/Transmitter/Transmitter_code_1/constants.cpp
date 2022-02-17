@@ -18,3 +18,6 @@ This is a file which contains all the constants used in the Transmitter code
 
 
 #define ADXL345 0x53 // The ADXL345 sensor I2C address (can found in datasheet)
+
+
+#define turning_speed_divide_constant 2

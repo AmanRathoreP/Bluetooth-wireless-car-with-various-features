@@ -45,4 +45,8 @@ private:
     void init(bool);
 };
 
+void get_motor_directions_and_speed(short &, bool &, bool &, short &, bool &, bool &, short, short, bool);
+void __terminal_value__(char, bool &, bool &, bool &, bool &);
+void __change_direction__(bool &, bool &, bool &, bool &);
+
 #endif
