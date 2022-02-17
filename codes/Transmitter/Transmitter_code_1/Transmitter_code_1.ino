@@ -32,14 +32,17 @@ void setup()
 
 void loop()
 {
-  short x_axis=4, y_axis=71;
+  short x_axis, y_axis;
+  bool state=0;
 
-  Joystick(0).get_position(x_axis, y_axis);
+  Joystick(0).get_position(x_axis, y_axis,state);
 
   lcd.print("X = ");
   lcd.println(x_axis);
   lcd.print("Y = ");
   lcd.println(y_axis);
+    lcd.print("State = ");
+  lcd.println(state);
 
   lcd.display();
   delay(10);

@@ -32,10 +32,8 @@ public:
     Joystick(short, short);
     Joystick(void);
     Joystick(bool);
-    // void get_position(int &, int &, short, short);
-    void get_position(short &, short &, short, short);
-    // void get_position(int &, int &);
-    void get_position(short &, short &);
+    void get_position(short &, short &, bool &, short, short, short,bool);
+    void get_position(short &, short &, bool &);
 
 private:
     void init(short, short);

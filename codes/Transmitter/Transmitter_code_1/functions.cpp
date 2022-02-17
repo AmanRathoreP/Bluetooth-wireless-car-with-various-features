@@ -145,14 +145,25 @@ Joystick::Joystick(bool set_or_not)
 //     x = (int)x;
 //     y = (int)y;
 // }
-void Joystick::get_position(short &x, short &y, short pin_x, short pin_y)
+void Joystick::get_position(short &x, short &y, bool &_state, short pin_x, short pin_y, short state_pin, bool filter)
 {
     x = analogRead(pin_x);
     y = analogRead(pin_y);
+    _state = !(digitalRead(state_pin));
+
+if (filter){
+    if ((x > 500) && (x < 515))
+    {
+        x = 511;
+    }
+    if ((y > 495) && (y < 515))
+    {
+        y = 511;
+    }}
 }
-void Joystick::get_position(short &x, short &y)
+void Joystick::get_position(short &x, short &y, bool &_state)
 {
-    get_position(x, y, A0, A1);
+    get_position(x, y, _state, A0, A1, 7, 1);
 }
 // void Joystick::get_position(int &x, int &y)
 // {
