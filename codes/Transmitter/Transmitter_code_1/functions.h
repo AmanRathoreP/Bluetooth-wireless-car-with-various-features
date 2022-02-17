@@ -26,4 +26,19 @@ public:
     void get_position(short &, short &);
 };
 
+class Joystick
+{
+public:
+    Joystick(short, short);
+    Joystick(void);
+    Joystick(bool);
+    void get_position(short &, short &, bool &, short, short, short,bool);
+    void get_position(short &, short &, bool &);
+
+private:
+    void init(short, short);
+    void init(void);
+    void init(bool);
+};
+
 #endif

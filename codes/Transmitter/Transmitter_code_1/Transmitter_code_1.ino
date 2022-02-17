@@ -18,32 +18,33 @@ In this tutorial, you will learn about how to interface an transmiter with recei
 
 Adafruit_PCD8544 lcd = Adafruit_PCD8544(Nokia5110_LCD_clk, Nokia5110_LCD_din, Nokia5110_LCD_do, Nokia5110_LCD_ce, Nokia5110_LCD_rst);
 
-
 void setup()
 {
   // Serial.begin(9600); // Initiate serial communication for printing the results on the Serial monitor
   lcd.begin(21, 4);
   Wire.begin(); // Initiating the Wire library
-  Gyroscope(-1,-9); // Initiating the Gyroscope class
 
- 
+  Gyroscope(-1, -9); // Initiating the Gyroscope class
+  Joystick(1);       // Initiating the Joystick class
 }
 
 void loop()
 {
-  float x_axis=4.487, y_axis=71.8;
+  short x_axis, y_axis;
+  bool state = 0;
 
-Gyroscope(0).get_position(x_axis, y_axis);
+  Gyroscope(0).get_position(x_axis, y_axis);
+  Joystick(0).get_position(x_axis, y_axis, state);
 
-lcd.print("X = ");
-  lcd.println(x_axis);
-  lcd.print("Y = ");
-  lcd.println(y_axis);
+//  lcd.print("X = ");
+//  lcd.println(x_axis);
+//  lcd.print("Y = ");
+//  lcd.println(y_axis);
+//  lcd.print("State = ");
+//  lcd.println(state);
 
   lcd.display();
-  delay(200);
+  delay(10);
   lcd.clearDisplay();
   lcd.setCursor(0, 0);
-
-  
 }
