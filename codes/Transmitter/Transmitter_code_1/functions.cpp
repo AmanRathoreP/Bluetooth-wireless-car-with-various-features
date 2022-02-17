@@ -30,7 +30,6 @@ Gyroscope::Gyroscope(bool set_or_not)
 {
     if (set_or_not)
         set_offset();
-        else{set_offset(0,0);}
 }
 
 void Gyroscope::get_position(float &x, float &y)

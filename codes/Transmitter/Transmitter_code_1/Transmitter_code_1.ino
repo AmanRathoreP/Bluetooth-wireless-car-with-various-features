@@ -17,14 +17,14 @@ In this tutorial, you will learn about how to interface an transmiter with recei
 #include "functions.h"
 
 Adafruit_PCD8544 lcd = Adafruit_PCD8544(Nokia5110_LCD_clk, Nokia5110_LCD_din, Nokia5110_LCD_do, Nokia5110_LCD_ce, Nokia5110_LCD_rst);
-//Gyroscope gyroscope =Gyroscope();
+
 
 void setup()
 {
   // Serial.begin(9600); // Initiate serial communication for printing the results on the Serial monitor
   lcd.begin(21, 4);
-  Wire.begin(); // Initiate the Wire library
-
+  Wire.begin(); // Initiating the Wire library
+  Gyroscope(-1,-9); // Initiating the Gyroscope class
 
  
 }
@@ -33,7 +33,7 @@ void loop()
 {
   float x_axis=4.487, y_axis=71.8;
 
-Gyroscope(-1,-9).get_position(x_axis, y_axis);
+Gyroscope(0).get_position(x_axis, y_axis);
 
 lcd.print("X = ");
   lcd.println(x_axis);
