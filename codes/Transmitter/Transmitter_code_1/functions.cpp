@@ -124,13 +124,13 @@ void Gyroscope::set_offset(void)
 //! Note: Below given is the class of Joystick but not of Gyroscope
 //! Note: Below given is the class of Joystick but not of Gyroscope
 
-Joystick::Joystick(short x, short y)
+Joystick::Joystick(short x, short y,short state_pin)
 {
-    init(x, y);
+    init(x, y,state_pin);
 }
 Joystick::Joystick(void)
 {
-    init(A0, A1);
+    init(A0, A1,7);
 }
 Joystick::Joystick(bool set_or_not)
 {
@@ -148,21 +148,36 @@ void Joystick::get_position(short &x, short &y, bool &_state, short pin_x, short
 {
     x = analogRead(pin_x);
     y = analogRead(pin_y);
-    _state = !(digitalRead(state_pin));
 
-if (filter){
-    if ((x > 500) && (x < 515))
+
+get_state(_state,state_pin);
+    if (filter)
     {
-        x = 511;
+        if ((x > 500) && (x < 515))
+        {
+            x = 511;
+        }
+        if ((y > 495) && (y < 515))
+        {
+            y = 511;
+        }
     }
-    if ((y > 495) && (y < 515))
-    {
-        y = 511;
-    }}
 }
 void Joystick::get_position(short &x, short &y, bool &_state)
 {
     get_position(x, y, _state, A0, A1, 7, 1);
+}
+void Joystick::get_position(short &x, short &y)
+{ bool fake_state=0;
+    get_position(x, y, fake_state, A0, A1, 7, 1);
+}
+void Joystick::get_state( bool &_state,short state_pin)
+{
+       if  (!(digitalRead(state_pin)))
+    {_state = !_state;}delay(200);
+}void Joystick::get_state( bool &_state)
+{
+       get_state(_state,7);
 }
 // void Joystick::get_position(int &x, int &y)
 // {
@@ -211,12 +226,13 @@ void Joystick::get_position(short &x, short &y, bool &_state)
 // }
 void Joystick::init(void)
 {
-    init(A0, A1);
+    init(A0, A1,7);
 }
-void Joystick::init(short x, short y)
+void Joystick::init(short x_pin, short y_pin,short state_pin)
 {
-    pinMode(x, INPUT);
-    pinMode(y, INPUT);
+    pinMode(x_pin, INPUT);
+    pinMode(y_pin, INPUT);
+    pinMode(state_pin, INPUT_PULLUP);
 }
 void Joystick::init(bool set_or_not)
 {

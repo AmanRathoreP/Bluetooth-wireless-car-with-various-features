@@ -29,14 +29,17 @@ public:
 class Joystick
 {
 public:
-    Joystick(short, short);
+    Joystick(short, short,short);
     Joystick(void);
     Joystick(bool);
     void get_position(short &, short &, bool &, short, short, short,bool);
     void get_position(short &, short &, bool &);
+    void get_position(short &, short &);
+    void get_state(bool &);void get_state(bool &,short);
+    
 
 private:
-    void init(short, short);
+    void init(short, short,short);
     void init(void);
     void init(bool);
 };
