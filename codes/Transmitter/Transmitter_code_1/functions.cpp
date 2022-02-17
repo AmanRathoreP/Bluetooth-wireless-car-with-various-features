@@ -101,3 +101,115 @@ void Gyroscope::set_offset(void)
 {
     set_offset(0, -11);
 }
+
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+//! Note: Below given is the class of Joystick but not of Gyroscope
+
+Joystick::Joystick(short x, short y)
+{
+    init(x, y);
+}
+Joystick::Joystick(void)
+{
+    init(A0, A1);
+}
+Joystick::Joystick(bool set_or_not)
+{
+    init(set_or_not);
+}
+
+// void Joystick::get_position(int &x, int &y, short pin_x, short pin_y)
+// {
+//     volatile short x_val=x,y_val=y;
+//     get_position(x_val, y_val, (short)pin_x, (short)pin_y);
+//     x = (int)x;
+//     y = (int)y;
+// }
+void Joystick::get_position(short &x, short &y, short pin_x, short pin_y)
+{
+    x = analogRead(pin_x);
+    y = analogRead(pin_y);
+}
+void Joystick::get_position(short &x, short &y)
+{
+    get_position(x, y, A0, A1);
+}
+// void Joystick::get_position(int &x, int &y)
+// {
+//   volatile short x_val=x,y_val=y;
+//     get_position(x_val, y_val, A0, A1);
+//     x = (int)x;
+//     y = (int)y;
+// }
+
+// void Joystick::set_offset(short x_offset, short y_offset)
+// {
+
+// Wire.beginTransmission(ADXL345); // Start communicating with the device
+// Wire.write(0x2D);                // Access/ talk to POWER_CTL Register - 0x2D
+// // Enable measurement
+// Wire.write(8); // (8dec -> 0000 1000 binary) Bit D3 High for measuring enable
+// Wire.endTransmission();
+// delay(10);
+
+// /*
+//     Wire.beginTransmission(ADXL345);
+//     Wire.write(0x31);
+//     Wire.write(15); // dec(15) = 0000 1111 in binary
+//     Wire.endTransmission();
+//     delay(10);
+// */
+
+// // This code goes in the SETUP section
+// // Off-set Calibration
+// // X-axis
+// Wire.beginTransmission(ADXL345);
+// Wire.write(0x1E);     // X-axis offset register
+// Wire.write(x_offset); // round(difference_of(256, incorrent value)/4)
+// Wire.endTransmission();
+// delay(10);
+// // Y-axis
+// Wire.beginTransmission(ADXL345);
+// Wire.write(0x1F);     // Y-axis offset register
+// Wire.write(y_offset); // round(difference_of(256, incorrent value)/4)
+// Wire.endTransmission();
+// delay(10);
+// }
+// void Joystick::set_offset(void)
+// {
+//     set_offset(0, -11);
+// }
+void Joystick::init(void)
+{
+    init(A0, A1);
+}
+void Joystick::init(short x, short y)
+{
+    pinMode(x, INPUT);
+    pinMode(y, INPUT);
+}
+void Joystick::init(bool set_or_not)
+{
+    if (set_or_not)
+        init();
+}
