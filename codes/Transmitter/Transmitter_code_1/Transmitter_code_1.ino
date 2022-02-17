@@ -24,17 +24,18 @@ void setup()
   lcd.begin(21, 4);
   Wire.begin(); // Initiating the Wire library
 
-  Gyroscope(-1, -9); // Initiating the Gyroscope class
-  Joystick(1);       // Initiating the Joystick class
+  Gyroscope(-1, -36); // Initiating the Gyroscope class
+  Joystick(1);        // Initiating the Joystick class
 }
 
 void loop()
 {
   short x_axis, y_axis;
 
-  Joystick(0).get_state(state);Gyroscope(0).get_position(x_axis, y_axis);  
+  Joystick(0).get_state(state);
+Joystick(0).get_position(x_axis, y_axis);
 if (state)
-  Joystick(0).get_position(x_axis, y_axis);
+   Gyroscope(0).get_position(x_axis, y_axis,true);  
 
 
 

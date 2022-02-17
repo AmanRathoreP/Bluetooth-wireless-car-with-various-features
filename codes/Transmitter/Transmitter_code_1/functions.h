@@ -21,9 +21,10 @@ public:
     Gyroscope(bool);
     void set_offset(void);
     void set_offset(short, short);
-    void get_position(float &, float &);
     void get_position(int &, int &);
-    void get_position(short &, short &);
+    void get_position(short &, short &,bool);
+    private:
+    void filter_values(short &, short &);
 };
 
 class Joystick

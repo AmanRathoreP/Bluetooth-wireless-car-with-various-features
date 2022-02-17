@@ -15,8 +15,7 @@ This file contains some functions and may some class for the proper functioning 
 #include <Arduino.h>
 #include "functions.h"
 
-// class functions::Gyroscope(){}
-// ;
+
 
 Gyroscope::Gyroscope(short x_offset, short y_offset)
 {
@@ -32,9 +31,34 @@ Gyroscope::Gyroscope(bool set_or_not)
         set_offset();
 }
 
-void Gyroscope::get_position(float &x, float &y)
+//void Gyroscope::get_position(float &x, float &y)
+//{
+//    }
+
+void Gyroscope::get_position(int &x, int &y)
 {
-    Wire.beginTransmission(ADXL345);
+//    float x_axis_value = x;
+//    float y_axis_value = y;
+ get_position(x, y);
+//    x = (int)x_axis_value;
+//    y = (int)y_axis_value;
+
+
+
+
+
+   
+}
+void Gyroscope::get_position(short &x, short &y,bool filter )
+{
+//     int x_axis_value = x;
+//     int y_axis_value = y;
+//    get_position(x_axis_value, y_axis_value);
+//    x = (short)x_axis_value;
+//    y = (short)y_axis_value;
+
+
+     Wire.beginTransmission(ADXL345);
     Wire.write(0x32);
     Wire.endTransmission(false);
     Wire.requestFrom(ADXL345, 4, 1); // Note: I'm not using z value as my work can be done fine useing x and y values
@@ -43,24 +67,63 @@ void Gyroscope::get_position(float &x, float &y)
                                           //  X_out = X_out / 256;                      // For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
     y = (Wire.read() | Wire.read() << 8); // Y-axis value
                                           //  Y_out = Y_out / 256;                      // For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
+
+if (filter)
+filter_values(x,y);
 }
 
-void Gyroscope::get_position(int &x, int &y)
-{
-    float x_axis_value = x;
-    float y_axis_value = y;
-    get_position(x_axis_value, y_axis_value);
-    x = (int)x_axis_value;
-    y = (int)y_axis_value;
-}
-void Gyroscope::get_position(short &x, short &y)
-{
-    float x_axis_value = x;
-    float y_axis_value = y;
-    get_position(x_axis_value, y_axis_value);
-    x = (short)x_axis_value;
-    y = (short)y_axis_value;
-}
+
+
+void Gyroscope::filter_values(short &x, short &y){
+  if (x < (-260) )
+       {
+           x = -259;
+        }
+        if (y  < (-364))
+        {
+            y =  -363;
+        }
+ 
+
+ if (x > 269 )
+       {
+           x = 268;
+        }
+        if (y  >166)
+        {
+            y =  165;
+        }
+ 
+  
+  x=map(x, -260, 269, 0, 1023);
+y=map(y, -365,166, 0, 1023);  //  y=map(y, -260, 269, 0, 1023);  // y=map(y, -310, 233, 0, 1024);   
+if ((x > 491) && (x < 521))
+       {
+           x = 511;
+        }
+        if ((y > 484) && (y < 515))
+        {
+            y = 511;
+        }
+
+        if (x < 0)
+        {
+            x = 0;
+        }
+        if (x >1023)
+       {
+           x = 1023;
+        }
+        if (y <0)
+       {
+           y = 0;
+        }
+        if (y >1023)
+       {
+           y = 1023;
+        }
+  }
+  
 
 void Gyroscope::set_offset(short x_offset, short y_offset)
 {
@@ -174,7 +237,7 @@ void Joystick::get_position(short &x, short &y)
 void Joystick::get_state( bool &_state,short state_pin)
 {
        if  (!(digitalRead(state_pin)))
-    {_state = !_state;}delay(200);
+    {_state = !_state;}delay(100);
 }void Joystick::get_state( bool &_state)
 {
        get_state(_state,7);
