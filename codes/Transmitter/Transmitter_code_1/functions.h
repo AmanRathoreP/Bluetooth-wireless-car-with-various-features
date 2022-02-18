@@ -58,7 +58,13 @@ GUI(GUI_info&);GUI(GUI_info&,short);GUI(short);GUI(void);
 void display_data(GUI_info&);
 private:
 void get_home_screen(GUI_info&);
-void developer_mode(GUI_info &);
+void DeveloperMode(GUI_info &);
+void FreePlay(GUI_info &);
+void LineBalancing(GUI_info &);
+void SpeedPlay(GUI_info &);
+void AvoidObstacle(GUI_info &);
+void Setings(GUI_info &);
+void draw_stuff(GUI_info &, String);
 };
 
 #endif

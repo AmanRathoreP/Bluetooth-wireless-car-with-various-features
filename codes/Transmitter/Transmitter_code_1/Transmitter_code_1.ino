@@ -24,7 +24,7 @@ Adafruit_PCD8544 lcd = gui_info.lcd;
 short x_axis=0, y_axis=0;
 void setup()
 {
-  // Serial.begin(9600); // Initiate serial communication for printing the results on the Serial monitor
+Serial.begin(9600); // Initiate serial communication for printing the results on the Serial monitor
   lcd.begin(21, 4); lcd.clearDisplay();
   lcd.display();
 //  Serial.begin(9600);
@@ -71,4 +71,11 @@ GUI().display_data(gui_info);
 }
 
 void check_state(bool &gui_state){    gui_state =!( digitalRead(8));}
-void send_motor_data(short &motor_1_speed, bool &motor_1_terminal_1, bool &motor_1_terminal_2, short &motor_2_speed, bool &motor_2_terminal_1, bool &motor_2_terminal_2, short x_coordinate, short y_coordinate, bool state){}
+void send_motor_data(short &motor_1_speed, bool &motor_1_terminal_1, bool &motor_1_terminal_2, short &motor_2_speed, bool &motor_2_terminal_1, bool &motor_2_terminal_2, short x_coordinate, short y_coordinate, bool state){
+      
+String text_to_display = String("X = " + String(x_coordinate) + " Y = " + String(y_coordinate) + "  State = " + String(state) + " R = " + String(motor_1_terminal_1) + ", " + String(motor_1_terminal_2) + ", " + String(motor_1_speed) + " L = " + String(motor_2_terminal_1) + ", " + String(motor_2_terminal_2) + ", " + String(motor_2_speed));
+
+ Serial.println(text_to_display);
+// Serial.println("\n\n");
+    
+  }

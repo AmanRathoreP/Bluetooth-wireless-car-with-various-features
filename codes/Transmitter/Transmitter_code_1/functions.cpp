@@ -16,6 +16,7 @@ This file contains some functions and may some class for the proper functioning 
 #include "functions.h"
 #include <Adafruit_PCD8544.h>
 #include <string.h>
+#include <ArxContainer.h>
 
 Gyroscope::Gyroscope(short x_offset, short y_offset)
 {
@@ -539,9 +540,9 @@ void GUI::get_home_screen(GUI_info &gui_info)
         else if (menu_item >= 6)
             menu_item = 0;
 
-        String text_to_display_array[6] = {String(">FreePlay\n"), String(">LineBalancing\n"), String(">SpeedPlay\n"), String(">AvoidObstacle\n"), String(">Seetings\n"), String(">DeveloperMode\n")};
+        String text_to_display_array[6] = {String(">FreePlay\n"), String(">LineBalancing\n"), String(">SpeedPlay\n"), String(">AvoidObstacle\n"), String(">Setings\n"), String(">DeveloperMode\n")};
 
-        String text_to_display = String(String(">FreePlay\n") + String(">LineBalancing\n") + String(">SpeedPlay\n") + String(">AvoidObstacle\n") + String(">Seetings\n") + String(">DeveloperMode\n"));
+        String text_to_display = String(String(">FreePlay\n") + String(">LineBalancing\n") + String(">SpeedPlay\n") + String(">AvoidObstacle\n") + String(">Setings\n") + String(">DeveloperMode\n"));
 
         gui_info.lcd.clearDisplay();
         gui_info.lcd.setCursor(0, 0);
@@ -553,24 +554,91 @@ void GUI::get_home_screen(GUI_info &gui_info)
         gui_info.lcd.setCursor(0, (8 * menu_item));
         gui_info.lcd.setTextColor(WHITE, BLACK);
         gui_info.lcd.print(String(text_to_display_array[menu_item]));
+        gui_info.lcd.setTextColor(BLACK);
         gui_info.lcd.display();
 
-        // gui_info.gui_option_selected = 'd';
+        Joystick(0).get_state(gui_info.input_state);
+        if ((gui_info.input_state) == 1)
+        {
+            switch (menu_item)
+            {
+            case 0:
+                //* FreePlay is selected
+                gui_info.gui_option_selected = 'f';
+                break;
+            case 1:
+                //* LineBalancing is selected
+                gui_info.gui_option_selected = 'l';
+                break;
+            case 2:
+                //* SpeedPlay is selected
+                gui_info.gui_option_selected = 'p';
+                break;
+            case 3:
+                //* AvoidObstacle is selected
+                gui_info.gui_option_selected = 'o';
+                break;
+            case 4:
+                //* Setings is selected
+                gui_info.gui_option_selected = 's';
+                break;
+            case 5:
+                //* DeveloperMode is selected
+                gui_info.gui_option_selected = 'd';
+                break;
+
+            default:
+                //* let it be main menu
+                gui_info.gui_option_selected = 'm';
+                break;
+            }
+        }
     }
 }
 
 void GUI::display_data(GUI_info &gui_info)
 {
-    if (gui_info.gui_option_selected == 'd')
+    switch (gui_info.gui_option_selected)
     {
-        developer_mode(gui_info);
-    }
-    if (gui_info.gui_option_selected == 'm')
-    {
+    case 'f':
+        //* FreePlay is selected
+        FreePlay(gui_info);
+        //! gui_info.gui_option_selected = 'f';
+        break;
+    case 'l':
+        //* LineBalancing is selected
+        LineBalancing(gui_info);
+        //! gui_info.gui_option_selected = 'l';
+        break;
+    case 'p':
+        //* SpeedPlay is selected
+        SpeedPlay(gui_info);
+        //! gui_info.gui_option_selected = 'p';
+        break;
+    case 'o':
+        //* AvoidObstacle is selected
+        AvoidObstacle(gui_info);
+        //! gui_info.gui_option_selected = 'o';
+        break;
+    case 's':
+        //* Setings is selected
+        Setings(gui_info);
+        //! gui_info.gui_option_selected = 's';
+        break;
+    case 'd':
+        //* DeveloperMode is selected
+        DeveloperMode(gui_info);
+        //! gui_info.gui_option_selected = 'd';
+        break;
+
+    default:
+        //* let it be main menu
         get_home_screen(gui_info);
+        //! gui_info.gui_option_selected = 'm';
+        break;
     }
 }
-void GUI::developer_mode(GUI_info &gui_info)
+void GUI::DeveloperMode(GUI_info &gui_info)
 {
     bool motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2;
     short motor_1_speed, motor_2_speed;
@@ -584,4 +652,85 @@ void GUI::developer_mode(GUI_info &gui_info)
     gui_info.lcd.print(text_to_display);
     gui_info.lcd.display();
     // delay(10);
+}
+
+void GUI::Setings(GUI_info &gui_info)
+{
+    while (1)
+    {
+        gui_info.input_state = 0;
+        Joystick(0).get_state(gui_info.input_state);
+        static short contrast = 21;
+        static char joystick_position = 'l'; //* l means low, h means high ; it will help to only select option when joystick make transition from low to high so that if joystick leave high then no other option will be selected until it is again set to low
+
+        Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
+        if ((gui_info.y_axis >= 490) && (joystick_position == 'l'))
+        {
+            contrast--;
+            joystick_position == 'h';
+        }
+        else if ((gui_info.y_axis <= (-490)) && (joystick_position == 'l'))
+        {
+            contrast++;
+            joystick_position == 'h';
+        }
+
+        if ((gui_info.input_state) == 1)
+        {
+            gui_info.gui_option_selected = 'm';
+            break;
+        }
+
+        gui_info.lcd.begin(contrast, 4);
+        gui_info.lcd.clearDisplay();
+        gui_info.lcd.setCursor(10, 10);
+        gui_info.lcd.setTextSize(5);
+        gui_info.lcd.print(String(contrast, DEC));
+        gui_info.lcd.setCursor(0, 0);
+        gui_info.lcd.setTextSize(1);
+        gui_info.lcd.print(" Set Contrast ");
+        gui_info.lcd.setCursor(0, 0);
+        gui_info.lcd.display();
+    }
+}
+void GUI::LineBalancing(GUI_info &gui_info) {}
+void GUI::SpeedPlay(GUI_info &gui_info) {}
+void GUI::AvoidObstacle(GUI_info &gui_info) {}
+void GUI::FreePlay(GUI_info &gui_info)
+{
+    // gui_info.input_state = 0;
+    Joystick(0).get_state(gui_info.input_state);
+    if ((gui_info.input_state))
+    { //* Joystick is selected
+
+        Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
+        draw_stuff(gui_info, "Joystick");
+    }
+    else
+    { //* Gyroscope is selected
+        Gyroscope(0).get_position(gui_info.x_axis, gui_info.y_axis, true);
+        draw_stuff(gui_info, "Gyroscope");
+    }
+}
+void GUI::draw_stuff(GUI_info &gui_info, String name)
+{
+
+    gui_info.lcd.clearDisplay();
+    gui_info.x_axis = map(gui_info.x_axis, -511, 511, 2, 82);
+    gui_info.y_axis = map(gui_info.y_axis, 511, -511, 2, 46);
+    gui_info.lcd.fillCircle(gui_info.x_axis, gui_info.y_axis, 1, BLACK);
+    if ((gui_info.x_axis <= 60) && (gui_info.y_axis <= 10))
+    {
+        gui_info.lcd.setCursor(20, 20);
+        gui_info.lcd.print(name);
+        // gui_info.lcd.setCursor(0, 0);
+    }
+    else
+    {
+        gui_info.lcd.setCursor(20, 0);
+        gui_info.lcd.print(name);
+    }
+
+    gui_info.lcd.display();
+    gui_info.lcd.clearDisplay();
 }
