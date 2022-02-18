@@ -514,14 +514,48 @@ GUI::GUI(short pin)
 }
 GUI::GUI(void) {}
 
-void GUI::get_home_screen(GUI_info& gui_info)
+void GUI::get_home_screen(GUI_info &gui_info)
 {
 
     if (gui_info.gui_state)
     {
+        gui_info.input_state = 0;
+        static char joystick_position = 'l'; //* l means low, h means high ; it will help to only select option when joystick make transition from low to high so that if joystick leave high then no other option will be selected until it is again set to low
+        static short menu_item = 0;
+        Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
+
+        if ((gui_info.y_axis >= 490) && (joystick_position == 'l'))
+        {
+            menu_item--;
+            joystick_position == 'h';
+        }
+        else if ((gui_info.y_axis <= (-490)) && (joystick_position == 'l'))
+        {
+            menu_item++;
+            joystick_position == 'h';
+        }
+        if (menu_item <= -1)
+            menu_item = 5;
+        else if (menu_item >= 6)
+            menu_item = 0;
+
+        String text_to_display_array[6] = {String(">FreePlay\n"), String(">LineBalancing\n"), String(">SpeedPlay\n"), String(">AvoidObstacle\n"), String(">Seetings\n"), String(">DeveloperMode\n")};
+
+        String text_to_display = String(String(">FreePlay\n") + String(">LineBalancing\n") + String(">SpeedPlay\n") + String(">AvoidObstacle\n") + String(">Seetings\n") + String(">DeveloperMode\n"));
+
         gui_info.lcd.clearDisplay();
-        gui_info.lcd.println("     Menu    ");
+        gui_info.lcd.setCursor(0, 0);
+        gui_info.lcd.setTextColor(BLACK);
+        gui_info.lcd.print(text_to_display);
+        // gui_info.lcd.display();
+
+        // gui_info.lcd.clearDisplay();
+        gui_info.lcd.setCursor(0, (8 * menu_item));
+        gui_info.lcd.setTextColor(WHITE, BLACK);
+        gui_info.lcd.print(String(text_to_display_array[menu_item]));
         gui_info.lcd.display();
+
+        // gui_info.gui_option_selected = 'd';
     }
 }
 
@@ -529,20 +563,25 @@ void GUI::display_data(GUI_info &gui_info)
 {
     if (gui_info.gui_option_selected == 'd')
     {
-        bool motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2;
-        short motor_1_speed, motor_2_speed;
-
-        get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2,gui_info.x_axis, gui_info.y_axis, gui_info.input_state);
-
-        String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_1_terminal_1) + ", " + String(motor_1_terminal_2) + ", " + String(motor_1_speed) + "\nL = " + String(motor_2_terminal_1) + ", " + String(motor_2_terminal_2) + ", " + String(motor_2_speed));
-
-        gui_info.lcd.clearDisplay();
-        gui_info.lcd.setCursor(0, 0);gui_info.lcd.print(text_to_display);
-        gui_info.lcd.display();
-        // delay(10);
+        developer_mode(gui_info);
     }
     if (gui_info.gui_option_selected == 'm')
     {
         get_home_screen(gui_info);
     }
+}
+void GUI::developer_mode(GUI_info &gui_info)
+{
+    bool motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2;
+    short motor_1_speed, motor_2_speed;
+
+    get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis, gui_info.input_state);
+
+    String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_1_terminal_1) + ", " + String(motor_1_terminal_2) + ", " + String(motor_1_speed) + "\nL = " + String(motor_2_terminal_1) + ", " + String(motor_2_terminal_2) + ", " + String(motor_2_speed));
+
+    gui_info.lcd.clearDisplay();
+    gui_info.lcd.setCursor(0, 0);
+    gui_info.lcd.print(text_to_display);
+    gui_info.lcd.display();
+    // delay(10);
 }

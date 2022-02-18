@@ -58,6 +58,7 @@ GUI(GUI_info&);GUI(GUI_info&,short);GUI(short);GUI(void);
 void display_data(GUI_info&);
 private:
 void get_home_screen(GUI_info&);
+void developer_mode(GUI_info &);
 };
 
 #endif

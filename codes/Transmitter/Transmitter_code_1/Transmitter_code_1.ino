@@ -17,7 +17,7 @@ In this tutorial, you will learn about how to interface an transmiter with recei
 #include "functions.h"
 
 
-bool state = 0;
+//bool state = 0;
 GUI_info gui_info;
 
 Adafruit_PCD8544 lcd = gui_info.lcd;
@@ -39,16 +39,16 @@ void setup()
 
 void loop()
 {
-  gui_info.input_state=state;
+//  gui_info.input_state=state;
     gui_info.x_axis=x_axis;
       gui_info.y_axis=y_axis;
-//       gui_info.gui_option_selected='d';
+//  gui_info.gui_option_selected='d';
   
 
 
-  Joystick(0).get_state(state);
+  Joystick(0).get_state(gui_info.input_state);
 Joystick(0).get_position(x_axis, y_axis);
-if (state)
+if (gui_info.input_state)
    Gyroscope(0).get_position(x_axis, y_axis,true);  
 
 
@@ -59,8 +59,8 @@ if ((!(gui_info.gui_state))&&(gui_info.gui_option_selected!='m')){
 
 bool motor_1_terminal_1,motor_1_terminal_2,motor_2_terminal_1,motor_2_terminal_2;
 short motor_1_speed,motor_2_speed;
-get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, x_axis, y_axis,state);
-send_motor_data(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, x_axis, y_axis,state);
+get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, x_axis, y_axis,gui_info.input_state);
+send_motor_data(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, x_axis, y_axis,gui_info.input_state);
 GUI().display_data(gui_info);
 }else { 
   //* axis values will used for calculating menu movement
