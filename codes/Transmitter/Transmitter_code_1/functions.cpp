@@ -14,8 +14,8 @@ This file contains some functions and may some class for the proper functioning 
 #include "constants.cpp"
 #include <Arduino.h>
 #include "functions.h"
-
-
+#include <Adafruit_PCD8544.h>
+#include <string.h>
 
 Gyroscope::Gyroscope(short x_offset, short y_offset)
 {
@@ -31,34 +31,27 @@ Gyroscope::Gyroscope(bool set_or_not)
         set_offset();
 }
 
-//void Gyroscope::get_position(float &x, float &y)
+// void Gyroscope::get_position(float &x, float &y)
 //{
-//    }
+//     }
 
 void Gyroscope::get_position(int &x, int &y)
 {
-//    float x_axis_value = x;
-//    float y_axis_value = y;
- get_position(x, y);
-//    x = (int)x_axis_value;
-//    y = (int)y_axis_value;
-
-
-
-
-
-   
+    //    float x_axis_value = x;
+    //    float y_axis_value = y;
+    get_position(x, y);
+    //    x = (int)x_axis_value;
+    //    y = (int)y_axis_value;
 }
-void Gyroscope::get_position(short &x, short &y,bool filter )
+void Gyroscope::get_position(short &x, short &y, bool filter)
 {
-//     int x_axis_value = x;
-//     int y_axis_value = y;
-//    get_position(x_axis_value, y_axis_value);
-//    x = (short)x_axis_value;
-//    y = (short)y_axis_value;
+    //     int x_axis_value = x;
+    //     int y_axis_value = y;
+    //    get_position(x_axis_value, y_axis_value);
+    //    x = (short)x_axis_value;
+    //    y = (short)y_axis_value;
 
-
-     Wire.beginTransmission(ADXL345);
+    Wire.beginTransmission(ADXL345);
     Wire.write(0x32);
     Wire.endTransmission(false);
     Wire.requestFrom(ADXL345, 4, 1); // Note: I'm not using z value as my work can be done fine useing x and y values
@@ -68,77 +61,74 @@ void Gyroscope::get_position(short &x, short &y,bool filter )
     y = (Wire.read() | Wire.read() << 8); // Y-axis value
                                           //  Y_out = Y_out / 256;                      // For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
 
-if (filter)
-filter_values(x,y);
+    if (filter)
+        filter_values(x, y);
 }
 
+void Gyroscope::filter_values(short &x, short &y)
+{
+    if (x < (-260))
+    {
+        x = -259;
+    }
+    if (y < (-364))
+    {
+        y = -363;
+    }
 
+    if (x > 269)
+    {
+        x = 268;
+    }
+    if (y > 166)
+    {
+        y = 165;
+    }
 
-void Gyroscope::filter_values(short &x, short &y){
-  if (x < (-260) )
-       {
-           x = -259;
-        }
-        if (y  < (-364))
-        {
-            y =  -363;
-        }
- 
+    x = map(x, -260, 269, -511, 511);
+    y = map(y, -365, 166, -511, 511); //  y=map(y, -260, 269, 0, 1023);  // y=map(y, -310, 233, 0, 1024);
 
- if (x > 269 )
-       {
-           x = 268;
-        }
-        if (y  >166)
-        {
-            y =  165;
-        }
+    if (((7) > x) && (x > (-17)))
+        x = 0;
+    if (((1) > y) && (y > (-24)))
+        y = 0;
 
-        x = map(x, -260, 269, -511, 511);
-        y = map(y, -365, 166, -511, 511); //  y=map(y, -260, 269, 0, 1023);  // y=map(y, -310, 233, 0, 1024);
+    if (y <= (-507))
+        y = (-511);
+    else if ((y > 425) && (y <= 431))
+        y = 430;
 
-        if (((7) > x) && (x > (-17)))
-            x = 0;
-        if (((1) > y) && (y > (-24)))
-            y = 0;
+    x *= (-1); // to make things work in an systematic manner
+    y *= (-1); // to make things work in an systematic manner
 
-        if (y <= (-507))
-            y = (-511);
-        else if ((y > 425) && (y <= 431))
-            y = 430;
+    // if ((x > 491) && (x < 521))
+    // {
+    //     x = 511;
+    // }
+    // if ((y > 484) && (y < 515))
+    // {
+    //     y = 511;
+    // }
 
-        x *= (-1); // to make things work in an systematic manner
-        y *= (-1); // to make things work in an systematic manner
-
-        // if ((x > 491) && (x < 521))
-        // {
-        //     x = 511;
-        // }
-        // if ((y > 484) && (y < 515))
-        // {
-        //     y = 511;
-        // }
-
-        // if (x < 0)
-        // {
-        //     x = 0;
-        // }
-        // if (x > 1023)
-        // {
-        //     x = 1023;
-        // }
-        // if (y < 0)
-        // {
-        //     y = 0;
-        // }
-        // if (y > 1023)
-        // {
-        //     y = 1023;
-        // }
-        // x = map(x, 0, 1023, -511, 511);
-        // y = map(y, 0, 1023, -511, 511);
-  }
-  
+    // if (x < 0)
+    // {
+    //     x = 0;
+    // }
+    // if (x > 1023)
+    // {
+    //     x = 1023;
+    // }
+    // if (y < 0)
+    // {
+    //     y = 0;
+    // }
+    // if (y > 1023)
+    // {
+    //     y = 1023;
+    // }
+    // x = map(x, 0, 1023, -511, 511);
+    // y = map(y, 0, 1023, -511, 511);
+}
 
 void Gyroscope::set_offset(short x_offset, short y_offset)
 {
@@ -149,15 +139,14 @@ void Gyroscope::set_offset(short x_offset, short y_offset)
     Wire.write(8); // (8dec -> 0000 1000 binary) Bit D3 High for measuring enable
     Wire.endTransmission();
     delay(10);
-    
 
-/*
-    Wire.beginTransmission(ADXL345); 
-    Wire.write(0x31);        
-    Wire.write(15); // dec(15) = 0000 1111 in binary
-    Wire.endTransmission();
-    delay(10);
-*/
+    /*
+        Wire.beginTransmission(ADXL345);
+        Wire.write(0x31);
+        Wire.write(15); // dec(15) = 0000 1111 in binary
+        Wire.endTransmission();
+        delay(10);
+    */
 
     // This code goes in the SETUP section
     // Off-set Calibration
@@ -202,13 +191,13 @@ void Gyroscope::set_offset(void)
 //! Note: Below given is the class of Joystick but not of Gyroscope
 //! Note: Below given is the class of Joystick but not of Gyroscope
 
-Joystick::Joystick(short x, short y,short state_pin)
+Joystick::Joystick(short x, short y, short state_pin)
 {
-    init(x, y,state_pin);
+    init(x, y, state_pin);
 }
 Joystick::Joystick(void)
 {
-    init(A0, A1,7);
+    init(A0, A1, 7);
 }
 Joystick::Joystick(bool set_or_not)
 {
@@ -227,8 +216,7 @@ void Joystick::get_position(short &x, short &y, bool &_state, short pin_x, short
     x = analogRead(pin_x);
     y = analogRead(pin_y);
 
-
-get_state(_state,state_pin);
+    get_state(_state, state_pin);
     if (filter)
     {
         x = map(x, 0, 1023, -511, 511);
@@ -249,16 +237,21 @@ void Joystick::get_position(short &x, short &y, bool &_state)
     get_position(x, y, _state, A0, A1, 7, 1);
 }
 void Joystick::get_position(short &x, short &y)
-{ bool fake_state=0;
+{
+    bool fake_state = 0;
     get_position(x, y, fake_state, A0, A1, 7, 1);
 }
-void Joystick::get_state( bool &_state,short state_pin)
+void Joystick::get_state(bool &_state, short state_pin)
 {
-       if  (!(digitalRead(state_pin)))
-    {_state = !_state;}delay(100);
-}void Joystick::get_state( bool &_state)
+    if (!(digitalRead(state_pin)))
+    {
+        _state = !_state;
+    }
+    delay(100);
+}
+void Joystick::get_state(bool &_state)
 {
-       get_state(_state,7);
+    get_state(_state, 7);
 }
 // void Joystick::get_position(int &x, int &y)
 // {
@@ -307,9 +300,9 @@ void Joystick::get_state( bool &_state,short state_pin)
 // }
 void Joystick::init(void)
 {
-    init(A0, A1,7);
+    init(A0, A1, 7);
 }
-void Joystick::init(short x_pin, short y_pin,short state_pin)
+void Joystick::init(short x_pin, short y_pin, short state_pin)
 {
     pinMode(x_pin, INPUT);
     pinMode(y_pin, INPUT);
@@ -482,4 +475,74 @@ void __change_direction__(bool &motor_1_terminal_1, bool &motor_1_terminal_2, bo
     motor_1_terminal_2 = !motor_1_terminal_2;
     motor_2_terminal_1 = !motor_2_terminal_1;
     motor_2_terminal_2 = !motor_2_terminal_2;
+}
+
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+//! Note: This is the start of gui classes
+
+GUI::GUI(GUI_info &gui_info)
+{
+    GUI(gui_info, 8);
+}
+GUI::GUI(GUI_info &gui_info, short pin)
+{
+    gui_info.gui_state = !(digitalRead(pin));
+}
+GUI::GUI(short pin)
+{
+    pinMode(pin, INPUT);
+}
+GUI::GUI(void) {}
+
+void GUI::get_home_screen(GUI_info& gui_info)
+{
+
+    if (gui_info.gui_state)
+    {
+        gui_info.lcd.clearDisplay();
+        gui_info.lcd.println("     Menu    ");
+        gui_info.lcd.display();
+    }
+}
+
+void GUI::display_data(GUI_info &gui_info)
+{
+    if (gui_info.gui_option_selected == 'd')
+    {
+        bool motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2;
+        short motor_1_speed, motor_2_speed;
+
+        get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2,gui_info.x_axis, gui_info.y_axis, gui_info.input_state);
+
+        String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_1_terminal_1) + ", " + String(motor_1_terminal_2) + ", " + String(motor_1_speed) + "\nL = " + String(motor_2_terminal_1) + ", " + String(motor_2_terminal_2) + ", " + String(motor_2_speed));
+
+        gui_info.lcd.clearDisplay();
+        gui_info.lcd.setCursor(0, 0);gui_info.lcd.print(text_to_display);
+        gui_info.lcd.display();
+        // delay(10);
+    }
+    if (gui_info.gui_option_selected == 'm')
+    {
+        get_home_screen(gui_info);
+    }
 }
