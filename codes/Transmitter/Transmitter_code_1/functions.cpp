@@ -360,11 +360,3 @@ void __terminal_value__(char direction_to_turn, bool &motor_1_terminal_1, bool &
         break;
     }
 }
-
-void __change_direction__(bool &motor_1_terminal_1, bool &motor_1_terminal_2, bool &motor_2_terminal_1, bool &motor_2_terminal_2)
-{
-    motor_1_terminal_1 = !motor_1_terminal_1;
-    motor_1_terminal_2 = !motor_1_terminal_2;
-    motor_2_terminal_1 = !motor_2_terminal_1;
-    motor_2_terminal_2 = !motor_2_terminal_2;
-}
