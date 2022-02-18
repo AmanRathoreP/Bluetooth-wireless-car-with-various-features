@@ -31,48 +31,24 @@ Gyroscope::Gyroscope(bool set_or_not)
         set_offset();
 }
 
-//void Gyroscope::get_position(float &x, float &y)
-//{
-//    }
-
 void Gyroscope::get_position(int &x, int &y)
 {
-//    float x_axis_value = x;
-//    float y_axis_value = y;
- get_position(x, y);
-//    x = (int)x_axis_value;
-//    y = (int)y_axis_value;
-
-
-
-
-
-   
+       get_position(x, y);
 }
-void Gyroscope::get_position(short &x, short &y,bool filter )
+void Gyroscope::get_position(short &x, short &y, bool filter)
 {
-//     int x_axis_value = x;
-//     int y_axis_value = y;
-//    get_position(x_axis_value, y_axis_value);
-//    x = (short)x_axis_value;
-//    y = (short)y_axis_value;
 
-
-     Wire.beginTransmission(ADXL345);
+    Wire.beginTransmission(ADXL345);
     Wire.write(0x32);
     Wire.endTransmission(false);
     Wire.requestFrom(ADXL345, 4, 1); // Note: I'm not using z value as my work can be done fine useing x and y values
 
     x = (Wire.read() | Wire.read() << 8); // X-axis value
-                                          //  X_out = X_out / 256;                      // For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
     y = (Wire.read() | Wire.read() << 8); // Y-axis value
-                                          //  Y_out = Y_out / 256;                      // For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
 
-if (filter)
-filter_values(x,y);
+    if (filter)
+        filter_values(x, y);
 }
-
-
 
 void Gyroscope::filter_values(short &x, short &y){
   if (x < (-260) )
@@ -109,65 +85,26 @@ void Gyroscope::filter_values(short &x, short &y){
 
         x *= (-1); // to make things work in an systematic manner
         y *= (-1); // to make things work in an systematic manner
-
-        // if ((x > 491) && (x < 521))
-        // {
-        //     x = 511;
-        // }
-        // if ((y > 484) && (y < 515))
-        // {
-        //     y = 511;
-        // }
-
-        // if (x < 0)
-        // {
-        //     x = 0;
-        // }
-        // if (x > 1023)
-        // {
-        //     x = 1023;
-        // }
-        // if (y < 0)
-        // {
-        //     y = 0;
-        // }
-        // if (y > 1023)
-        // {
-        //     y = 1023;
-        // }
-        // x = map(x, 0, 1023, -511, 511);
-        // y = map(y, 0, 1023, -511, 511);
   }
   
 
 void Gyroscope::set_offset(short x_offset, short y_offset)
 {
 
-    Wire.beginTransmission(ADXL345); // Start communicating with the device
+    Wire.beginTransmission(ADXL345);
     Wire.write(0x2D);                // Access/ talk to POWER_CTL Register - 0x2D
     // Enable measurement
     Wire.write(8); // (8dec -> 0000 1000 binary) Bit D3 High for measuring enable
     Wire.endTransmission();
     delay(10);
-    
 
-/*
-    Wire.beginTransmission(ADXL345); 
-    Wire.write(0x31);        
-    Wire.write(15); // dec(15) = 0000 1111 in binary
-    Wire.endTransmission();
-    delay(10);
-*/
-
-    // This code goes in the SETUP section
-    // Off-set Calibration
-    // X-axis
+    // x_axis offset calibration
     Wire.beginTransmission(ADXL345);
     Wire.write(0x1E);     // X-axis offset register
     Wire.write(x_offset); // round(difference_of(256, incorrent value)/4)
     Wire.endTransmission();
     delay(10);
-    // Y-axis
+    // y_axis offset calibration
     Wire.beginTransmission(ADXL345);
     Wire.write(0x1F);     // Y-axis offset register
     Wire.write(y_offset); // round(difference_of(256, incorrent value)/4)
@@ -215,13 +152,6 @@ Joystick::Joystick(bool set_or_not)
     init(set_or_not);
 }
 
-// void Joystick::get_position(int &x, int &y, short pin_x, short pin_y)
-// {
-//     volatile short x_val=x,y_val=y;
-//     get_position(x_val, y_val, (short)pin_x, (short)pin_y);
-//     x = (int)x;
-//     y = (int)y;
-// }
 void Joystick::get_position(short &x, short &y, bool &_state, short pin_x, short pin_y, short state_pin, bool filter)
 {
     x = analogRead(pin_x);
@@ -260,51 +190,6 @@ void Joystick::get_state( bool &_state,short state_pin)
 {
        get_state(_state,7);
 }
-// void Joystick::get_position(int &x, int &y)
-// {
-//   volatile short x_val=x,y_val=y;
-//     get_position(x_val, y_val, A0, A1);
-//     x = (int)x;
-//     y = (int)y;
-// }
-
-// void Joystick::set_offset(short x_offset, short y_offset)
-// {
-
-// Wire.beginTransmission(ADXL345); // Start communicating with the device
-// Wire.write(0x2D);                // Access/ talk to POWER_CTL Register - 0x2D
-// // Enable measurement
-// Wire.write(8); // (8dec -> 0000 1000 binary) Bit D3 High for measuring enable
-// Wire.endTransmission();
-// delay(10);
-
-// /*
-//     Wire.beginTransmission(ADXL345);
-//     Wire.write(0x31);
-//     Wire.write(15); // dec(15) = 0000 1111 in binary
-//     Wire.endTransmission();
-//     delay(10);
-// */
-
-// // This code goes in the SETUP section
-// // Off-set Calibration
-// // X-axis
-// Wire.beginTransmission(ADXL345);
-// Wire.write(0x1E);     // X-axis offset register
-// Wire.write(x_offset); // round(difference_of(256, incorrent value)/4)
-// Wire.endTransmission();
-// delay(10);
-// // Y-axis
-// Wire.beginTransmission(ADXL345);
-// Wire.write(0x1F);     // Y-axis offset register
-// Wire.write(y_offset); // round(difference_of(256, incorrent value)/4)
-// Wire.endTransmission();
-// delay(10);
-// }
-// void Joystick::set_offset(void)
-// {
-//     set_offset(0, -11);
-// }
 void Joystick::init(void)
 {
     init(A0, A1,7);
@@ -446,30 +331,30 @@ void __terminal_value__(char direction_to_turn, bool &motor_1_terminal_1, bool &
         motor_2_terminal_1 = 1;
         motor_2_terminal_2 = 0;
         break;
-    case 'R': //* for Right
-        motor_1_terminal_1 = 1;
-        motor_1_terminal_2 = 0;
-        motor_2_terminal_1 = 0;
-        motor_2_terminal_2 = 1;
-        break;
-    case 'L': //* for Left
-        motor_1_terminal_1 = 0;
-        motor_1_terminal_2 = 1;
-        motor_2_terminal_1 = 1;
-        motor_2_terminal_2 = 0;
-        break;
-    case 'F': //* for Forward
-        motor_1_terminal_1 = 0;
-        motor_1_terminal_2 = 1;
-        motor_2_terminal_1 = 0;
-        motor_2_terminal_2 = 1;
-        break;
-    case 'B': //* for Backword
-        motor_1_terminal_1 = 1;
-        motor_1_terminal_2 = 0;
-        motor_2_terminal_1 = 1;
-        motor_2_terminal_2 = 0;
-        break;
+        // case 'R': //* for Right
+        //     motor_1_terminal_1 = 1;
+        //     motor_1_terminal_2 = 0;
+        //     motor_2_terminal_1 = 0;
+        //     motor_2_terminal_2 = 1;
+        //     break;
+        // case 'L': //* for Left
+        //     motor_1_terminal_1 = 0;
+        //     motor_1_terminal_2 = 1;
+        //     motor_2_terminal_1 = 1;
+        //     motor_2_terminal_2 = 0;
+        //     break;
+        // case 'F': //* for Forward
+        //     motor_1_terminal_1 = 0;
+        //     motor_1_terminal_2 = 1;
+        //     motor_2_terminal_1 = 0;
+        //     motor_2_terminal_2 = 1;
+        //     break;
+        // case 'B': //* for Backword
+        //     motor_1_terminal_1 = 1;
+        //     motor_1_terminal_2 = 0;
+        //     motor_2_terminal_1 = 1;
+        //     motor_2_terminal_2 = 0;
+        //     break;
 
     default:
         break;
