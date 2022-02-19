@@ -13,6 +13,8 @@ This is just a header file and may you know why is this here
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include <Adafruit_PCD8544.h>
+
 class Gyroscope
 {
 public:
@@ -47,5 +49,32 @@ private:
 
 void get_motor_directions_and_speed(short &, bool &, bool &, short &, bool &, bool &, short, short, bool);
 void __terminal_value__(char, bool &, bool &, bool &, bool &);
+
+class GUI
+{
+public:
+    GUI(GUI_info &);
+    GUI(GUI_info &, short);
+    GUI(short);
+    GUI(void);
+    void display_data(GUI_info &, motor &);
+    void set_score(long);
+    void reset_score(void);
+    void menu_lock(Adafruit_PCD8544);
+
+private:
+    void get_home_screen(GUI_info &);
+    void DeveloperMode(GUI_info &, motor &);
+    void FreePlay(GUI_info &, motor &);
+    void LineBalancing(GUI_info &, motor &);
+    void SpeedPlay(GUI_info &, motor &);
+    void AvoidObstacle(GUI_info &, motor &);
+    void Setings(GUI_info &);
+    void draw_stuff(GUI_info &, String);
+    void get_previous_score(long &);
+    void store_long_in_eeprom(short, long);
+    void get_long_from_eeprom(short, long &);
+    void store_score(long);
+};
 
 #endif
