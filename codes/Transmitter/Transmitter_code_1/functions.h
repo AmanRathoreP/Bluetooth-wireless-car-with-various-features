@@ -59,6 +59,9 @@ public:
     GUI(short);
     GUI(void);
     void display_data(GUI_info &, motor &);
+    void set_score(long);
+    void reset_score(void);
+    void menu_lock(Adafruit_PCD8544);
 
 private:
     void get_home_screen(GUI_info &);
@@ -69,6 +72,10 @@ private:
     void AvoidObstacle(GUI_info &, motor &);
     void Setings(GUI_info &);
     void draw_stuff(GUI_info &, String);
+    void get_previous_score(long &);
+    void store_long_in_eeprom(short, long);
+    void get_long_from_eeprom(short, long &);
+    void store_score(long);
 };
 
 #endif

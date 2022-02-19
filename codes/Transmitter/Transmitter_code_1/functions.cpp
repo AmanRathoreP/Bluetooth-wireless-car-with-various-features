@@ -646,7 +646,7 @@ void GUI::DeveloperMode(GUI_info &gui_info, motor &motor_info)
 
     // get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis, gui_info.input_state);
 
-    String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_info.motor_1_terminal_1) + ", " + String(motor_info.motor_1_terminal_2) + ", " + String(motor_info.motor_1_speed) + "\nL = " + String(motor_info.motor_2_terminal_1) + ", " + String(motor_info.motor_2_terminal_2) + ", " + String(motor_info.motor_2_speed));
+    String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_info.motor_1_terminal_1) + ", " + String(motor_info.motor_1_terminal_2) + ", " + String(motor_info.motor_1_speed) + "\nL = " + String(motor_info.motor_2_terminal_1) + ", " + String(motor_info.motor_2_terminal_2) + ", " + String(motor_info.motor_2_speed) + "\nLock = " + String(gui_info.gui_state));
 
     gui_info.lcd.clearDisplay();
     gui_info.lcd.setCursor(0, 0);
@@ -694,9 +694,6 @@ void GUI::Setings(GUI_info &gui_info)
         gui_info.lcd.display();
     }
 }
-void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info) {}
-void GUI::SpeedPlay(GUI_info &gui_info, motor &motor_info) {}
-void GUI::AvoidObstacle(GUI_info &gui_info, motor &motor_info) {}
 void GUI::FreePlay(GUI_info &gui_info, motor &motor_info)
 {
     // gui_info.input_state = 0;
@@ -734,4 +731,89 @@ void GUI::draw_stuff(GUI_info &gui_info, String name)
 
     gui_info.lcd.display();
     gui_info.lcd.clearDisplay();
+}
+void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info) {}
+void GUI::AvoidObstacle(GUI_info &gui_info, motor &motor_info) {}
+void GUI::SpeedPlay(GUI_info &gui_info, motor &motor_info)
+{
+    long user_score = 0;
+    long max_score = 0;
+    get_previous_score(max_score);
+
+    gui_info.lcd.fillRect(0, 0, 84, (48 / 2) + 1, 1);
+    gui_info.lcd.setCursor(0, 1);
+    gui_info.lcd.setTextColor(WHITE);
+    if (!(gui_info.input_state))
+    { //* Joystick is selected
+        gui_info.lcd.print("   Joystick\n");
+    }
+    else
+    { //* Gyroscope is selected
+        gui_info.lcd.print("   Gyroscope\n");
+    }
+    gui_info.lcd.print("  Max Score   \n  ");
+    gui_info.lcd.println(max_score);
+
+    static long score = 0;
+    if ((motor_info.motor_1_speed) >= 300)
+    {
+        score++;
+    }
+    else if ((motor_info.motor_1_speed) >= 700)
+    {
+        score += 2;
+    }
+    else if (((motor_info.motor_1_speed) <= 250) && (score > 0))
+    {
+        score--;
+    }
+
+    // user_score = (((motor_info.motor_1_speed) + (motor_info.motor_2_speed)) / 2) / ((millis() / 1000) - time_begin);
+    user_score = score;
+    gui_info.lcd.setTextColor(BLACK);
+    gui_info.lcd.print("\n  Your Score  \n  ");
+    store_score(user_score);
+    gui_info.lcd.print(user_score);
+    // gui_info.lcd.print(motor_info.motor_1_speed);
+    gui_info.lcd.display();
+    gui_info.lcd.clearDisplay();
+}
+void GUI::get_previous_score(long &score)
+{
+    get_long_from_eeprom(50, score);
+}
+void GUI::store_score(long score)
+{
+    // static bool previously_called_or_not = false;
+    long previous_score = 0;
+    get_previous_score(previous_score);
+    if (score > previous_score)
+    {
+        store_long_in_eeprom(50, score);
+    }
+}
+void GUI::store_long_in_eeprom(short address, long data)
+{
+    EEPROM.update(address, (data >> 24) & 0xFF);
+    EEPROM.update(address + 1, (data >> 16) & 0xFF);
+    EEPROM.update(address + 2, (data >> 8) & 0xFF);
+    EEPROM.update(address + 3, data & 0xFF);
+}
+void GUI::get_long_from_eeprom(short address, long &data)
+{
+    data = ((long)EEPROM.read(address) << 24) + ((long)EEPROM.read(address + 1) << 16) + ((long)EEPROM.read(address + 2) << 8) + (long)EEPROM.read(address + 3);
+}
+void GUI::set_score(long data)
+{
+    store_long_in_eeprom(50, data);
+}
+void GUI::reset_score(void)
+{
+    set_score(0);
+}
+void GUI::menu_lock(Adafruit_PCD8544 lcd)
+{
+    lcd.clearDisplay();
+    lcd.print("Menu and car movement is locked please unlock it!");
+    lcd.display();
 }
