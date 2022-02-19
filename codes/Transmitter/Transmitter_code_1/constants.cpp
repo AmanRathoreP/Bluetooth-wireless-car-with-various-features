@@ -30,3 +30,13 @@ struct GUI_info{
   bool input_state=0; //* defines joystick is selected or Gyroscope is seledted 0 means Joystick is selected
   short x_axis,y_axis;
     };
+
+    struct motor
+    {
+      short motor_1_speed = 0;
+      bool motor_1_terminal_1 = 0;
+      bool motor_1_terminal_2 = 0;
+      short motor_2_speed = 0;
+      bool motor_2_terminal_1 = 0;
+      bool motor_2_terminal_2 = 0;
+    };

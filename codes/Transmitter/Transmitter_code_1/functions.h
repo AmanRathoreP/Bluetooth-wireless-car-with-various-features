@@ -54,17 +54,21 @@ void __change_direction__(bool &, bool &, bool &, bool &);
 class GUI
 {
 public:
-GUI(GUI_info&);GUI(GUI_info&,short);GUI(short);GUI(void);
-void display_data(GUI_info&);
+    GUI(GUI_info &);
+    GUI(GUI_info &, short);
+    GUI(short);
+    GUI(void);
+    void display_data(GUI_info &, motor &);
+
 private:
-void get_home_screen(GUI_info&);
-void DeveloperMode(GUI_info &);
-void FreePlay(GUI_info &);
-void LineBalancing(GUI_info &);
-void SpeedPlay(GUI_info &);
-void AvoidObstacle(GUI_info &);
-void Setings(GUI_info &);
-void draw_stuff(GUI_info &, String);
+    void get_home_screen(GUI_info &);
+    void DeveloperMode(GUI_info &, motor &);
+    void FreePlay(GUI_info &, motor &);
+    void LineBalancing(GUI_info &, motor &);
+    void SpeedPlay(GUI_info &, motor &);
+    void AvoidObstacle(GUI_info &, motor &);
+    void Setings(GUI_info &);
+    void draw_stuff(GUI_info &, String);
 };
 
 #endif

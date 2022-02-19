@@ -16,7 +16,8 @@ This file contains some functions and may some class for the proper functioning 
 #include "functions.h"
 #include <Adafruit_PCD8544.h>
 #include <string.h>
-#include <ArxContainer.h>
+// #include <ArxContainer.h>
+#include <EEPROM.h>
 
 Gyroscope::Gyroscope(short x_offset, short y_offset)
 {
@@ -523,7 +524,7 @@ void GUI::get_home_screen(GUI_info &gui_info)
         gui_info.input_state = 0;
         static char joystick_position = 'l'; //* l means low, h means high ; it will help to only select option when joystick make transition from low to high so that if joystick leave high then no other option will be selected until it is again set to low
         static short menu_item = 0;
-        Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
+        // Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
 
         if ((gui_info.y_axis >= 490) && (joystick_position == 'l'))
         {
@@ -596,28 +597,28 @@ void GUI::get_home_screen(GUI_info &gui_info)
     }
 }
 
-void GUI::display_data(GUI_info &gui_info)
+void GUI::display_data(GUI_info &gui_info, motor &motor_info)
 {
     switch (gui_info.gui_option_selected)
     {
     case 'f':
         //* FreePlay is selected
-        FreePlay(gui_info);
+        FreePlay(gui_info, motor_info);
         //! gui_info.gui_option_selected = 'f';
         break;
     case 'l':
         //* LineBalancing is selected
-        LineBalancing(gui_info);
+        LineBalancing(gui_info, motor_info);
         //! gui_info.gui_option_selected = 'l';
         break;
     case 'p':
         //* SpeedPlay is selected
-        SpeedPlay(gui_info);
+        SpeedPlay(gui_info, motor_info);
         //! gui_info.gui_option_selected = 'p';
         break;
     case 'o':
         //* AvoidObstacle is selected
-        AvoidObstacle(gui_info);
+        AvoidObstacle(gui_info, motor_info);
         //! gui_info.gui_option_selected = 'o';
         break;
     case 's':
@@ -627,7 +628,7 @@ void GUI::display_data(GUI_info &gui_info)
         break;
     case 'd':
         //* DeveloperMode is selected
-        DeveloperMode(gui_info);
+        DeveloperMode(gui_info, motor_info);
         //! gui_info.gui_option_selected = 'd';
         break;
 
@@ -638,14 +639,14 @@ void GUI::display_data(GUI_info &gui_info)
         break;
     }
 }
-void GUI::DeveloperMode(GUI_info &gui_info)
+void GUI::DeveloperMode(GUI_info &gui_info, motor &motor_info)
 {
-    bool motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2;
-    short motor_1_speed, motor_2_speed;
+    // bool motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2;
+    // short motor_1_speed, motor_2_speed;
 
-    get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis, gui_info.input_state);
+    // get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis, gui_info.input_state);
 
-    String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_1_terminal_1) + ", " + String(motor_1_terminal_2) + ", " + String(motor_1_speed) + "\nL = " + String(motor_2_terminal_1) + ", " + String(motor_2_terminal_2) + ", " + String(motor_2_speed));
+    String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_info.motor_1_terminal_1) + ", " + String(motor_info.motor_1_terminal_2) + ", " + String(motor_info.motor_1_speed) + "\nL = " + String(motor_info.motor_2_terminal_1) + ", " + String(motor_info.motor_2_terminal_2) + ", " + String(motor_info.motor_2_speed));
 
     gui_info.lcd.clearDisplay();
     gui_info.lcd.setCursor(0, 0);
@@ -666,12 +667,12 @@ void GUI::Setings(GUI_info &gui_info)
         Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
         if ((gui_info.y_axis >= 490) && (joystick_position == 'l'))
         {
-            contrast--;
+            contrast++;
             joystick_position == 'h';
         }
         else if ((gui_info.y_axis <= (-490)) && (joystick_position == 'l'))
         {
-            contrast++;
+            contrast--;
             joystick_position == 'h';
         }
 
@@ -693,22 +694,22 @@ void GUI::Setings(GUI_info &gui_info)
         gui_info.lcd.display();
     }
 }
-void GUI::LineBalancing(GUI_info &gui_info) {}
-void GUI::SpeedPlay(GUI_info &gui_info) {}
-void GUI::AvoidObstacle(GUI_info &gui_info) {}
-void GUI::FreePlay(GUI_info &gui_info)
+void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info) {}
+void GUI::SpeedPlay(GUI_info &gui_info, motor &motor_info) {}
+void GUI::AvoidObstacle(GUI_info &gui_info, motor &motor_info) {}
+void GUI::FreePlay(GUI_info &gui_info, motor &motor_info)
 {
     // gui_info.input_state = 0;
-    Joystick(0).get_state(gui_info.input_state);
-    if ((gui_info.input_state))
+    // Joystick(0).get_state(gui_info.input_state);
+    if (!(gui_info.input_state))
     { //* Joystick is selected
 
-        Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
+        // Joystick(0).get_position(gui_info.x_axis, gui_info.y_axis);
         draw_stuff(gui_info, "Joystick");
     }
     else
     { //* Gyroscope is selected
-        Gyroscope(0).get_position(gui_info.x_axis, gui_info.y_axis, true);
+        // Gyroscope(0).get_position(gui_info.x_axis, gui_info.y_axis, true);
         draw_stuff(gui_info, "Gyroscope");
     }
 }

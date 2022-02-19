@@ -19,6 +19,7 @@ In this tutorial, you will learn about how to interface an transmiter with recei
 
 //bool state = 0;
 GUI_info gui_info;
+motor motor_info;
 
 Adafruit_PCD8544 lcd = gui_info.lcd;
 short x_axis=0, y_axis=0;
@@ -57,15 +58,19 @@ check_state(gui_info.gui_state);
 if ((!(gui_info.gui_state))&&(gui_info.gui_option_selected!='m')){
   //* axis values will used for calculating vechicle movement
 
-bool motor_1_terminal_1,motor_1_terminal_2,motor_2_terminal_1,motor_2_terminal_2;
-short motor_1_speed,motor_2_speed;
-get_motor_directions_and_speed(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, x_axis, y_axis,gui_info.input_state);
-send_motor_data(motor_1_speed, motor_1_terminal_1, motor_1_terminal_2, motor_2_speed, motor_2_terminal_1, motor_2_terminal_2, x_axis, y_axis,gui_info.input_state);
-GUI().display_data(gui_info);
+get_motor_directions_and_speed(motor_info.motor_1_speed, motor_info.motor_1_terminal_1, motor_info.motor_1_terminal_2, motor_info.motor_2_speed, motor_info.motor_2_terminal_1, motor_info.motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis,gui_info.input_state);
+send_motor_data(motor_info.motor_1_speed, motor_info.motor_1_terminal_1, motor_info.motor_1_terminal_2, motor_info.motor_2_speed, motor_info.motor_2_terminal_1, motor_info.motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis,gui_info.input_state);
+GUI().display_data(gui_info,motor_info);
+ motor_info.motor_1_speed = 0;
+ motor_info.motor_1_terminal_1 = 0;
+ motor_info.motor_1_terminal_2 = 0;
+ motor_info.motor_2_speed = 0;
+ motor_info.motor_2_terminal_1 = 0;
+ motor_info.motor_2_terminal_2 = 0;
 }else { 
   //* axis values will used for calculating menu movement
   
-GUI().display_data(gui_info);
+GUI().display_data(gui_info,motor_info);
 }
   
 }
