@@ -670,50 +670,6 @@ void GUI::draw_stuff(GUI_info &gui_info, String name)
 }
 void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info) {}
 void GUI::AvoidObstacle(GUI_info &gui_info, motor &motor_info) {}
-void GUI::SpeedPlay(GUI_info &gui_info, motor &motor_info)
-{
-    long user_score = 0;
-    long max_score = 0;
-    get_previous_score(max_score);
-
-    gui_info.lcd.fillRect(0, 0, 84, (48 / 2) + 1, 1);
-    gui_info.lcd.setCursor(0, 1);
-    gui_info.lcd.setTextColor(WHITE);
-    if (!(gui_info.input_state))
-    { //* Joystick is selected
-        gui_info.lcd.print("   Joystick\n");
-    }
-    else
-    { //* Gyroscope is selected
-        gui_info.lcd.print("   Gyroscope\n");
-    }
-    gui_info.lcd.print("  Max Score   \n  ");
-    gui_info.lcd.println(max_score);
-
-    static long score = 0;
-    if ((motor_info.motor_1_speed) >= 300)
-    {
-        score++;
-    }
-    else if ((motor_info.motor_1_speed) >= 700)
-    {
-        score += 2;
-    }
-    else if (((motor_info.motor_1_speed) <= 250) && (score > 0))
-    {
-        score--;
-    }
-
-    // user_score = (((motor_info.motor_1_speed) + (motor_info.motor_2_speed)) / 2) / ((millis() / 1000) - time_begin);
-    user_score = score;
-    gui_info.lcd.setTextColor(BLACK);
-    gui_info.lcd.print("\n  Your Score  \n  ");
-    store_score(user_score);
-    gui_info.lcd.print(user_score);
-    // gui_info.lcd.print(motor_info.motor_1_speed);
-    gui_info.lcd.display();
-    gui_info.lcd.clearDisplay();
-}
 void GUI::get_previous_score(long &score)
 {
     get_long_from_eeprom(50, score);
@@ -752,4 +708,51 @@ void GUI::menu_lock(Adafruit_PCD8544 lcd)
     lcd.clearDisplay();
     lcd.print("Menu and car movement is locked please unlock it!");
     lcd.display();
+}
+void GUI::SpeedPlay(GUI_info &gui_info, motor &motor_info)
+{
+    long user_score = 0;
+    long max_score = 0;
+    get_previous_score(max_score);
+
+    gui_info.lcd.fillRect(0, 0, 84, (48 / 2) + 1, 1);
+    gui_info.lcd.setCursor(0, 1);
+    gui_info.lcd.setTextColor(WHITE);
+    if (!(gui_info.input_state))
+    { //* Joystick is selected
+        gui_info.lcd.print("   Joystick\n");
+    }
+    else
+    { //* Gyroscope is selected
+        gui_info.lcd.print("   Gyroscope\n");
+    }
+    gui_info.lcd.print("  Max Score   \n  ");
+    gui_info.lcd.println(max_score);
+
+    static long score = 0;
+    if (gui_info.gui_state == 1)
+    { //* Do not change score as the rc car movement is not selected
+    }
+    else if ((motor_info.motor_1_speed) >= 300)
+    {
+        score++;
+    }
+    else if ((motor_info.motor_1_speed) >= 700)
+    {
+        score += 2;
+    }
+    else if (((motor_info.motor_1_speed) <= 250) && (score > 0))
+    {
+        score--;
+    }
+
+    // user_score = (((motor_info.motor_1_speed) + (motor_info.motor_2_speed)) / 2) / ((millis() / 1000) - time_begin);
+    user_score = score;
+    gui_info.lcd.setTextColor(BLACK);
+    gui_info.lcd.print("\n  Your Score  \n  ");
+    store_score(user_score);
+    gui_info.lcd.print(user_score);
+    // gui_info.lcd.print(motor_info.motor_1_speed);
+    gui_info.lcd.display();
+    gui_info.lcd.clearDisplay();
 }
