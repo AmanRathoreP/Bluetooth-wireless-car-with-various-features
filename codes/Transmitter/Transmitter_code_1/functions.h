@@ -77,13 +77,16 @@ private:
     void get_long_from_eeprom(short, long &);
     void store_score(long);
     void get_distance_away_from(int &, int &);
+    void get_IR_sensor_readings(bool &, bool &);
 };
 
 class InterfaceSensor
 {
     void init_ultra_sonic();
+    void init_ir_sensor();
 
 public:
     void get_distance(int &, int &);
+    void get_IR_readings(bool &, bool &);
 };
 #endif
