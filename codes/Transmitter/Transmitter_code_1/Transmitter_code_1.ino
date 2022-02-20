@@ -79,12 +79,21 @@ GUI().display_data(gui_info,motor_info);
  motor_info.motor_2_speed = 0;
  motor_info.motor_2_terminal_1 = 0;
  motor_info.motor_2_terminal_2 = 0;
-}else { 
-  //* axis values will used for calculating menu movement
-  
-GUI().display_data(gui_info,motor_info);
 }
-  
+else
+{
+  //* axis values will used for calculating menu movement
+  String text_to_display = String(String(">FreePlay\n") + String(">LineBalancing\n") + String(">SpeedPlay\n") + String(">AvoidObstacle\n") + String(">Setings\n") + String(">DeveloperMode\n"));
+
+  gui_info.lcd.clearDisplay();
+  gui_info.lcd.setCursor(0, 0);
+  gui_info.lcd.setTextColor(BLACK);
+  gui_info.lcd.print(text_to_display);
+  //  gui_info.lcd.display();
+
+  //  gui_info.lcd.clearDisplay();
+  GUI().display_data(gui_info, motor_info);
+}
 }
 
 void check_state(bool &gui_state){    gui_state =!( digitalRead(8));}

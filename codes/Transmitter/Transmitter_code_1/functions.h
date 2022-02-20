@@ -24,25 +24,26 @@ public:
     void set_offset(void);
     void set_offset(short, short);
     void get_position(int &, int &);
-    void get_position(short &, short &,bool);
-    private:
+    void get_position(short &, short &, bool);
+
+private:
     void filter_values(short &, short &);
 };
 
 class Joystick
 {
 public:
-    Joystick(short, short,short);
+    Joystick(short, short, short);
     Joystick(void);
     Joystick(bool);
-    void get_position(short &, short &, bool &, short, short, short,bool);
+    void get_position(short &, short &, bool &, short, short, short, bool);
     void get_position(short &, short &, bool &);
     void get_position(short &, short &);
-    void get_state(bool &);void get_state(bool &,short);
-    
+    void get_state(bool &);
+    void get_state(bool &, short);
 
 private:
-    void init(short, short,short);
+    void init(short, short, short);
     void init(void);
     void init(bool);
 };
@@ -68,24 +69,21 @@ private:
     void FreePlay(GUI_info &, motor &);
     void LineBalancing(GUI_info &, motor &);
     void SpeedPlay(GUI_info &, motor &);
-    void AvoidObstacle(GUI_info &, motor &);
+    void AvoidObstacle(GUI_info &);
     void Setings(GUI_info &);
     void draw_stuff(GUI_info &, String);
     void get_previous_score(long &);
     void store_long_in_eeprom(short, long);
     void get_long_from_eeprom(short, long &);
     void store_score(long);
-
-    void get_distance_away_from(float &, float &);
+    void get_distance_away_from(int &, int &);
 };
 
 class InterfaceSensor
 {
-protected:
     void init_ultra_sonic();
 
 public:
-    void get_distance(float &, float &);
+    void get_distance(int &, int &);
 };
-
 #endif
