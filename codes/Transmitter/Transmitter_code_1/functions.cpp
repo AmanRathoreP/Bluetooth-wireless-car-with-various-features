@@ -479,12 +479,12 @@ void GUI::get_home_screen(GUI_info &gui_info)
 
         String text_to_display_array[6] = {String(">FreePlay\n"), String(">LineBalancing\n"), String(">SpeedPlay\n"), String(">AvoidObstacle\n"), String(">Setings\n"), String(">DeveloperMode\n")};
 
-        String text_to_display = String(String(">FreePlay\n") + String(">LineBalancing\n") + String(">SpeedPlay\n") + String(">AvoidObstacle\n") + String(">Setings\n") + String(">DeveloperMode\n"));
+        // String text_to_display = String(String(">FreePlay\n") + String(">LineBalancing\n") + String(">SpeedPlay\n") + String(">AvoidObstacle\n") + String(">Setings\n") + String(">DeveloperMode\n"));
 
-        gui_info.lcd.clearDisplay();
-        gui_info.lcd.setCursor(0, 0);
-        gui_info.lcd.setTextColor(BLACK);
-        gui_info.lcd.print(text_to_display);
+        // gui_info.lcd.clearDisplay();
+        // gui_info.lcd.setCursor(0, 0);
+        // gui_info.lcd.setTextColor(BLACK);
+        // gui_info.lcd.print(text_to_display);
         // gui_info.lcd.display();
 
         // gui_info.lcd.clearDisplay();
@@ -554,7 +554,7 @@ void GUI::display_data(GUI_info &gui_info, motor &motor_info)
         break;
     case 'o':
         //* AvoidObstacle is selected
-        AvoidObstacle(gui_info, motor_info);
+        AvoidObstacle(gui_info);
         //! gui_info.gui_option_selected = 'o';
         break;
     case 's':
@@ -673,7 +673,7 @@ void GUI::SpeedPlay(GUI_info &gui_info, motor &motor_info)
     long user_score = 0;
     long max_score = 0;
     get_previous_score(max_score);
-
+    gui_info.lcd.clearDisplay();
     gui_info.lcd.fillRect(0, 0, 84, (48 / 2) + 1, 1);
     gui_info.lcd.setCursor(0, 1);
     gui_info.lcd.setTextColor(WHITE);
@@ -754,47 +754,70 @@ void GUI::menu_lock(Adafruit_PCD8544 lcd)
     lcd.print("Menu and car movement is locked please unlock it!");
     lcd.display();
 }
-void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info) {}
+void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info) { gui_info.gui_option_selected = 'm'; }
 
-void GUI::AvoidObstacle(GUI_info &gui_info, motor &motor_info)
+void GUI::get_distance_away_from(int &right_distance, int &left_distance)
 {
-    //    float right_distance = 0, left_distance = 0;
-    //    get_distance_away_from(right_distance, left_distance);
-    //
-    //    gui_info.lcd.clearDisplay();
-    //    gui_info.lcd.print("Right = ");
-    //    gui_info.lcd.println(right_distance);
-    //    gui_info.lcd.print("Left = ");
-    //    gui_info.lcd.println(left_distance);
-    //    gui_info.lcd.display();
+    InterfaceSensor().get_distance(right_distance, left_distance);
 }
-// void GUI::get_distance_away_from(float &right_distance, float &left_distance)
-// {
-//     InterfaceSensor().get_distance(right_distance, left_distance);
-// }
-// void InterfaceSensor::init_ultra_sonic()
-// {
-//     pinMode(9, OUTPUT);
-//     pinMode(10, INPUT);
-//     pinMode(11, OUTPUT);
-//     pinMode(12, INPUT);
-// }
-// void InterfaceSensor::get_distance(float &right_distance, float &left_distance)
-// {
-//     static bool called_or_not = false;
-//     if (!called_or_not)
-//     {
-//         //* function is called for first time i.e. we need to init the sensor i.e. we need to define the pinMode
-//         init_ultra_sonic();
-//         called_or_not = true;
-//     }
+void InterfaceSensor::init_ultra_sonic()
+{
+    pinMode(9, OUTPUT);
+    pinMode(10, INPUT);
+    pinMode(11, OUTPUT);
+    pinMode(12, INPUT);
+}
+void InterfaceSensor::get_distance(int &right_distance, int &left_distance)
+{
+    static bool called_or_not = false;
+    if (!called_or_not)
+    {
+        //* function is called for first time i.e. we need to init the sensor i.e. we need to define the pinMode
+        init_ultra_sonic();
+        called_or_not = true;
+    }
+    digitalWrite(11, HIGH);
+    delay(1);
+    digitalWrite(11, LOW);
+    right_distance = (int)(((pulseIn(12, HIGH)) / 2) * (1 / 29.1));
+    digitalWrite(9, HIGH);
+    delay(1);
+    digitalWrite(9, LOW);
+    left_distance = (int)(((pulseIn(10, HIGH)) / 2) * (1 / 29.1));
+}
+void GUI::AvoidObstacle(GUI_info &gui_info)
+{
+    int right_distance = 0, left_distance = 0;
 
-//     digitalWrite(11, HIGH);
-//     delay(1);
-//     digitalWrite(11, LOW);
-//     right_distance = (float)(((pulseIn(12, HIGH)) / 2) * (1 / 29.1));
-//     digitalWrite(9, HIGH);
-//     delay(1);
-//     digitalWrite(9, LOW);
-//     left_distance = (float)(((pulseIn(10, HIGH)) / 2) * (1 / 29.1));
-// }
+    get_distance_away_from(right_distance, left_distance);
+
+    if (right_distance > 35)
+        right_distance = 35;
+    if (left_distance > 35)
+        left_distance = 35;
+
+    int right_graph_level = map(right_distance, 0, 35, 42, 0);
+    int left_graph_level = map(left_distance, 0, 35, 42, 0);
+
+    if (right_graph_level == 0)
+        right_graph_level = 1;
+    if (left_graph_level == 0)
+        left_graph_level = 1;
+
+    gui_info.lcd.clearDisplay();
+    gui_info.lcd.fillRect(42, 0, right_graph_level, 39, BLACK);
+    gui_info.lcd.fillRect(0 + (42 - left_graph_level), 0, left_graph_level, 39, BLACK);
+    if (!(gui_info.input_state))
+    { //* Joystick is selected
+        gui_info.lcd.print("\n\n\n\n\n   Joystick");
+    }
+    else
+    { //* Gyroscope is selected
+        gui_info.lcd.print("\n\n\n\n\n   Gyroscope");
+    }
+    // gui_info.lcd.print("\n\n\n\nRight = ");
+    // gui_info.lcd.println(right_distance);
+    // gui_info.lcd.print("Left = ");
+    // gui_info.lcd.println(left_distance);
+    gui_info.lcd.display();
+}
