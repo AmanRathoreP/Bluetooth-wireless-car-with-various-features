@@ -49,7 +49,6 @@ private:
 
 void get_motor_directions_and_speed(short &, bool &, bool &, short &, bool &, bool &, short, short, bool);
 void __terminal_value__(char, bool &, bool &, bool &, bool &);
-void __change_direction__(bool &, bool &, bool &, bool &);
 
 class GUI
 {
@@ -76,6 +75,17 @@ private:
     void store_long_in_eeprom(short, long);
     void get_long_from_eeprom(short, long &);
     void store_score(long);
+
+    void get_distance_away_from(float &, float &);
+};
+
+class InterfaceSensor
+{
+protected:
+    void init_ultra_sonic();
+
+public:
+    void get_distance(float &, float &);
 };
 
 #endif

@@ -8,6 +8,8 @@
         "istream": "cpp",
         "ostream": "cpp",
         "sstream": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "memory": "cpp",
+        "functional": "cpp"
     }
 }
