@@ -70,9 +70,19 @@ if ((!(gui_info.gui_state))&&(gui_info.gui_option_selected!='m')){
 //    lcd.display();
 
 
+
+GUI().display_data(gui_info,motor_info);
 get_motor_directions_and_speed(motor_info.motor_1_speed, motor_info.motor_1_terminal_1, motor_info.motor_1_terminal_2, motor_info.motor_2_speed, motor_info.motor_2_terminal_1, motor_info.motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis,gui_info.input_state);
 send_motor_data(motor_info.motor_1_speed, motor_info.motor_1_terminal_1, motor_info.motor_1_terminal_2, motor_info.motor_2_speed, motor_info.motor_2_terminal_1, motor_info.motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis,gui_info.input_state);
-GUI().display_data(gui_info,motor_info);
+
+if( gui_info.gui_option_selected == 'd'){
+      String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_info.motor_1_terminal_1) + ", " + String(motor_info.motor_1_terminal_2) + ", " + String(motor_info.motor_1_speed) + "\nL = " + String(motor_info.motor_2_terminal_1) + ", " + String(motor_info.motor_2_terminal_2) + ", " + String(motor_info.motor_2_speed) + "\nLock = " + String(gui_info.gui_state));
+
+    gui_info.lcd.clearDisplay();
+    gui_info.lcd.setCursor(0, 0);
+    gui_info.lcd.print(text_to_display);
+//    gui_info.lcd.display();
+    }
  motor_info.motor_1_speed = 0;
  motor_info.motor_1_terminal_1 = 0;
  motor_info.motor_1_terminal_2 = 0;
@@ -92,6 +102,14 @@ else
   //  gui_info.lcd.display();
 
   //  gui_info.lcd.clearDisplay();
+  if( gui_info.gui_option_selected == 'd'){
+      String text_to_display = String("X = " + String(gui_info.x_axis) + "\nY = " + String(gui_info.y_axis) + "\nState = " + String(gui_info.input_state) + "\nR = " + String(motor_info.motor_1_terminal_1) + ", " + String(motor_info.motor_1_terminal_2) + ", " + String(motor_info.motor_1_speed) + "\nL = " + String(motor_info.motor_2_terminal_1) + ", " + String(motor_info.motor_2_terminal_2) + ", " + String(motor_info.motor_2_speed) + "\nLock = " + String(gui_info.gui_state));
+
+    gui_info.lcd.clearDisplay();
+    gui_info.lcd.setCursor(0, 0);
+    gui_info.lcd.print(text_to_display);
+//    gui_info.lcd.display();
+    }
   GUI().display_data(gui_info, motor_info);
 }
 }
