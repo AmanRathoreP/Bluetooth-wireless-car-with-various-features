@@ -10,6 +10,9 @@
         "sstream": "cpp",
         "random": "cpp",
         "memory": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     }
 }

@@ -14,6 +14,7 @@ This is just a header file and may you know why is this here
 #define FUNCTIONS_H
 
 #include <Adafruit_PCD8544.h>
+//#include "constants.cpp"
 
 class Gyroscope
 {
@@ -85,5 +86,22 @@ class InterfaceSensor
 
 public:
     void get_distance(int &, int &);
+};
+
+class Blutooth
+{
+public:
+    Blutooth(int);
+    Blutooth();
+    void read(motor &, bool &);
+    void write(motor, bool);
+
+private:
+    void init(int);
+    void __read(String &);
+    void __write(String);
+    void motor_encode(motor, String &, bool);
+    void motor_decode(String, motor &, bool &);
+    bool bool_or_not(String);
 };
 #endif

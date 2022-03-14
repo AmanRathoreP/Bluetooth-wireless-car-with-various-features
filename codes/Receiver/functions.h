@@ -13,4 +13,21 @@ This is just a header file and may you know why is this here
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+void motor_controller(motor);
+class Blutooth
+{
+public:
+    Blutooth(int);
+    Blutooth();
+    void read(motor &, bool &);
+    void write(motor, bool);
+
+private:
+    void init(int);
+    void __read(String &);
+    void __write(String);
+    void motor_encode(motor, String &, bool);
+    void motor_decode(String, motor &, bool &);
+    bool bool_or_not(String);
+};
 #endif
