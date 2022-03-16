@@ -60,9 +60,9 @@ void Blutooth::init(int baud_rate)
 
 void Blutooth::__read(String &data)
 {
-    if (Serial.available() > 0)
+    if (Serial.available() )
     {
-        data = Serial.read();
+        data = Serial.readStringUntil('t').substring(0,13);
     }
 }
 void Blutooth::__write(String data)

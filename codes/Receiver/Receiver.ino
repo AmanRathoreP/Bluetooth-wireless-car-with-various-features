@@ -15,6 +15,7 @@ This is the receiver code for the project
 
 motor motor_info;
 bool state = 0; //* when 0 motor will not work
+String datas;
 void setup()
 {
     Blutooth();
@@ -34,14 +35,24 @@ void setup()
 
     pinMode(state_pin, OUTPUT);
 
-    // Serial.begin(4800);
 }
 void loop()
 {
-    Blutooth().read(motor_info, state);
-    if (state)
-    {
+//    Blutooth().read(motor_info, state);
+
+
+
+Blutooth().__read(datas);
+Blutooth().motor_decode(datas,motor_info,state);
+
+//if(state==1){digitalWrite(state_pin, HIGH);}else{digitalWrite(state_pin, LOW);}
+digitalWrite(state_pin, state);
+
+
+
         motor_controller(motor_info);
-    }
-    digitalWrite(state_pin, state);
+//    String text_to_display = String("R = " + String(motor_info.motor_1_terminal_1) + ", " + String(motor_info.motor_1_terminal_2) + ", " + String(motor_info.motor_1_speed) + "\nL = " + String(motor_info.motor_2_terminal_1) + ", " + String(motor_info.motor_2_terminal_2) + ", " + String(motor_info.motor_2_speed));
+//    Serial.println(text_to_display);
+
+  
 }

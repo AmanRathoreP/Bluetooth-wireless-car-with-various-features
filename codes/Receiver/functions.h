@@ -20,14 +20,15 @@ public:
     Blutooth(int);
     Blutooth();
     void read(motor &, bool &);
-    void write(motor, bool);
-
-private:
-    void init(int);
-    void __read(String &);
+    void write(motor, bool); void __read(String &);
+  void init(int);
+   
     void __write(String);
     void motor_encode(motor, String &, bool);
     void motor_decode(String, motor &, bool &);
     bool bool_or_not(String);
+    
+private:
+  
 };
 #endif

@@ -67,7 +67,7 @@ void loop()
     //     lcd.display();
 
     get_motor_directions_and_speed(motor_info.motor_1_speed, motor_info.motor_1_terminal_1, motor_info.motor_1_terminal_2, motor_info.motor_2_speed, motor_info.motor_2_terminal_1, motor_info.motor_2_terminal_2, gui_info.x_axis, gui_info.y_axis, gui_info.input_state);
-    send_motor_data(motor_info,gui_info.gui_state);
+    send_motor_data(motor_info,!(gui_info.gui_state));
     GUI().display_data(gui_info, motor_info);
     motor_info.motor_1_speed = 0;
     motor_info.motor_1_terminal_1 = 0;
@@ -79,6 +79,14 @@ void loop()
   else
   {
     //* axis values will used for calculating menu movement
+ motor_info.motor_1_speed = 0;
+    motor_info.motor_1_terminal_1 = 0;
+    motor_info.motor_1_terminal_2 = 0;
+    motor_info.motor_2_speed = 0;
+    motor_info.motor_2_terminal_1 = 0;
+    motor_info.motor_2_terminal_2 = 0;
+      send_motor_data(motor_info,!(gui_info.gui_state));
+    
     String text_to_display = String(String(">FreePlay\n") + String(">LineBalancing\n") + String(">SpeedPlay\n") + String(">AvoidObstacle\n") + String(">Setings\n") + String(">DeveloperMode\n"));
 
     gui_info.lcd.clearDisplay();

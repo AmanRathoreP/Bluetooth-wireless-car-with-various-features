@@ -844,7 +844,7 @@ void Blutooth::__read(String &data)
 {
     if (Serial.available() > 0)
     {
-        data = Serial.read();
+        data = Serial.readString().substring(0, 12);
     }
 }
 void Blutooth::__write(String data)
@@ -943,5 +943,5 @@ void Blutooth::write(motor data, bool state)
 {
     String data_str;
     motor_encode(data, data_str, state);
-    __write(data_str);
+    __write(String(data_str)+"t");
 }
