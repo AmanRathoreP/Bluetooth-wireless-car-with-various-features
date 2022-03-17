@@ -353,13 +353,13 @@ void __terminal_value__(char direction_to_turn, bool &motor_1_terminal_1, bool &
 {
     switch (direction_to_turn)
     {
-    case 'r': //* for Right
+    case 'l': //* for Right
         motor_1_terminal_1 = 1;
         motor_1_terminal_2 = 0;
         motor_2_terminal_1 = 0;
         motor_2_terminal_2 = 1;
         break;
-    case 'l': //* for Left
+    case 'r': //* for Left
         motor_1_terminal_1 = 0;
         motor_1_terminal_2 = 1;
         motor_2_terminal_1 = 1;
