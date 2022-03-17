@@ -29,15 +29,15 @@ void motor_controller(motor motor_data)
         };
     */
 
-     motor_data.motor_1_speed = map(motor_data.motor_1_speed, 0, 1024, 0, 255);
-     motor_data.motor_2_speed = map(motor_data.motor_2_speed, 0, 1024, 0, 255);
+    //  motor_data.motor_1_speed = map(motor_data.motor_1_speed, 0, 1024, 0, 255);
+    //  motor_data.motor_2_speed = map(motor_data.motor_2_speed, 0, 1024, 0, 255);
 
     digitalWrite(motor_1_terminal_1, motor_data.motor_1_terminal_1);
     digitalWrite(motor_1_terminal_2, motor_data.motor_1_terminal_2);
     digitalWrite(motor_2_terminal_1, motor_data.motor_2_terminal_1);
     digitalWrite(motor_2_terminal_2, motor_data.motor_2_terminal_2);
-    analogWrite(A0, motor_data.motor_1_speed);
-    analogWrite(A1, motor_data.motor_2_speed);
+    analogWrite(motor_1_speed_pin, motor_data.motor_1_speed);
+    analogWrite(motor_2_speed_pin, motor_data.motor_2_speed);
 }
 
 Blutooth::Blutooth(int baud_rate)

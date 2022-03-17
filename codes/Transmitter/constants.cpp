@@ -19,9 +19,7 @@ This is a file which contains all the constants used in the Transmitter code
 
 #define ADXL345 0x53 // The ADXL345 sensor I2C address (can found in datasheet)
 
-
-#define turning_speed_divide_constant 2
-
+#define turning_speed_divide_constant 1.42
 
 struct GUI_info{
   bool gui_state=0; //* defines that gui is selected or rc car movement is selected, 0 means gui movement is selected

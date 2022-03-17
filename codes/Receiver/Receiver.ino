@@ -25,8 +25,8 @@ void setup()
     pinMode(trig_left, OUTPUT);
     pinMode(echo_left, INPUT);
 
-    pinMode(A0, OUTPUT);
-    pinMode(A1, OUTPUT);
+    pinMode(motor_1_speed_pin, OUTPUT);
+    pinMode(motor_2_speed_pin, OUTPUT);
 
     pinMode(motor_1_terminal_1, OUTPUT);
     pinMode(motor_1_terminal_2, OUTPUT);

@@ -88,68 +88,48 @@ void Gyroscope::filter_values(short &x, short &y)
     x = map(x, -260, 269, -511, 511);
     y = map(y, -365, 166, -511, 511); //  y=map(y, -260, 269, 0, 1023);  // y=map(y, -310, 233, 0, 1024);
 
-    if (((7) > x) && (x > (-17)))
+    if ((x > (-100)) && (x < 100))
+    {
         x = 0;
-    if (((1) > y) && (y > (-24)))
+    }
+    if ((y > (-100)) && (y < 100))
+    {
         y = 0;
+    }
 
     if (y <= (-507))
-        y = (-511);
+    {
+        y = -511;
+    }
     else if ((y > 425) && (y <= 431))
+    {
         y = 430;
+    }
 
-    x *= (-1); // to make things work in an systematic manner
-    y *= (-1); // to make things work in an systematic manner
-
-    // if ((x > 491) && (x < 521))
-    // {
-    //     x = 511;
-    // }
-    // if ((y > 484) && (y < 515))
-    // {
-    //     y = 511;
-    // }
-
-    // if (x < 0)
-    // {
-    //     x = 0;
-    // }
-    // if (x > 1023)
-    // {
-    //     x = 1023;
-    // }
-    // if (y < 0)
-    // {
-    //     y = 0;
-    // }
-    // if (y > 1023)
-    // {
-    //     y = 1023;
-    // }
-    // x = map(x, 0, 1023, -511, 511);
-    // y = map(y, 0, 1023, -511, 511);
+    // x *= (-1); //* to make things work in an systematic manner
+    // y *= (-1); //* to make things work in an systematic manner
 }
 
 void Gyroscope::set_offset(short x_offset, short y_offset)
 {
 
     Wire.beginTransmission(ADXL345);
-    Wire.write(0x2D); // Access/ talk to POWER_CTL Register - 0x2D
+    Wire.write(0x2D); //* Access/ talk to POWER_CTL Register - 0x2D
     // Enable measurement
-    Wire.write(8); // (8dec -> 0000 1000 binary) Bit D3 High for measuring enable
+    Wire.write(8); //* (8dec -> 0000 1000 binary) Bit D3 High for measuring enable
     Wire.endTransmission();
     delay(10);
 
-    // x_axis offset calibration
+    //* x_axis offset calibration
     Wire.beginTransmission(ADXL345);
-    Wire.write(0x1E);     // X-axis offset register
-    Wire.write(x_offset); // round(difference_of(256, incorrent value)/4)
+    Wire.write(0x1E);     //* X-axis offset register
+    Wire.write(x_offset); //* round(difference_of(256, incorrent value)/4)
     Wire.endTransmission();
     delay(10);
-    // y_axis offset calibration
+    //* y_axis offset calibration
     Wire.beginTransmission(ADXL345);
-    Wire.write(0x1F);     // Y-axis offset register
-    Wire.write(y_offset); // round(difference_of(256, incorrent value)/4)
+    Wire.write(0x1F);     //* Y-axis offset register
+    Wire.write(y_offset); //* round(difference_of(256, incorrent value)/4)
     Wire.endTransmission();
     delay(10);
 }
@@ -205,11 +185,11 @@ void Joystick::get_position(short &x, short &y, bool &_state, short pin_x, short
         x = map(x, 0, 1023, -511, 511);
         y = map(y, 0, 1023, -511, 511);
 
-        if ((x > (-8)) && (x < (-4)))
+        if ((x > (-50)) && (x < 50))
         {
             x = 0;
         }
-        if ((y > (-14)) && (y < (-8)))
+        if ((y > (-50)) && (y < 50))
         {
             y = 0;
         }
@@ -308,12 +288,12 @@ void get_motor_directions_and_speed(short &motor_1_speed, bool &motor_1_terminal
         if (x_coordinate < 0)
         { //* Going forward+left turn
             __terminal_value__('l', motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2);
-            motor_1_speed = y_coordinate + (x_coordinate * (-1));
+            motor_1_speed = (y_coordinate + (x_coordinate * (-1))) / turning_speed_divide_constant;
         }
         else if (x_coordinate > 0)
         { //* Going forward+right turn
             __terminal_value__('r', motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2);
-            motor_1_speed = y_coordinate + x_coordinate;
+            motor_1_speed = (y_coordinate + x_coordinate) / turning_speed_divide_constant;
         }
     }
     else if (y_coordinate < 0)
@@ -322,12 +302,12 @@ void get_motor_directions_and_speed(short &motor_1_speed, bool &motor_1_terminal
         if (x_coordinate < 0)
         { //* Going backword+left turn
             __terminal_value__('l', motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2);
-            motor_1_speed = (y_coordinate + x_coordinate) * (-1);
+            motor_1_speed = ((y_coordinate + x_coordinate) * (-1)) / turning_speed_divide_constant;
         }
         else if (x_coordinate > 0)
         { //* Going backword+right turn
             __terminal_value__('r', motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2);
-            motor_1_speed = (y_coordinate * (-1)) + x_coordinate;
+            motor_1_speed = ((y_coordinate * (-1)) + x_coordinate) / turning_speed_divide_constant;
         }
     }
     if (y_coordinate == 0)
@@ -337,13 +317,13 @@ void get_motor_directions_and_speed(short &motor_1_speed, bool &motor_1_terminal
         {
             //* Turn Left
             __terminal_value__('l', motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2);
-            motor_1_speed = (x_coordinate * (-1)) / turning_speed_divide_constant;
+            motor_1_speed = (x_coordinate * (-1)) + 511;
         }
         else if (x_coordinate > 0)
         {
             //* Turn Right
             __terminal_value__('r', motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2);
-            motor_1_speed = x_coordinate / turning_speed_divide_constant;
+            motor_1_speed = x_coordinate + 511;
         }
     }
 
