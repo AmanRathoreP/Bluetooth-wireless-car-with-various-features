@@ -672,12 +672,14 @@ void GUI::SpeedPlay(GUI_info &gui_info, motor &motor_info)
     if (gui_info.gui_state == 1)
     { //* Do not change score as the rc car movement is not selected
     }
-    else if ((motor_info.motor_1_speed) >= 300)
+    else if (((motor_info.motor_1_speed) >= 300) && (((motor_info.motor_1_terminal_1 == 0) && (motor_info.motor_1_terminal_2 == 1) && (motor_info.motor_2_terminal_1 == 0) && (motor_info.motor_2_terminal_2 == 1)) || ((motor_info.motor_1_terminal_1 == 1) && (motor_info.motor_1_terminal_2 == 0) && (motor_info.motor_2_terminal_1 == 1) && (motor_info.motor_2_terminal_2 == 0))))
     {
+        //* Means car speed is greater than 300 and it is not rotating on it's own axis
         score++;
     }
-    else if ((motor_info.motor_1_speed) >= 700)
+    else if (((motor_info.motor_1_speed) >= 700) && (((motor_info.motor_1_terminal_1 == 0) && (motor_info.motor_1_terminal_2 == 1) && (motor_info.motor_2_terminal_1 == 0) && (motor_info.motor_2_terminal_2 == 1)) || ((motor_info.motor_1_terminal_1 == 1) && (motor_info.motor_1_terminal_2 == 0) && (motor_info.motor_2_terminal_1 == 1) && (motor_info.motor_2_terminal_2 == 0))))
     {
+        //* Means car speed is greater than 700 and it is not rotating on it's own axis
         score += 2;
     }
     else if (((motor_info.motor_1_speed) <= 250) && (score > 0))
