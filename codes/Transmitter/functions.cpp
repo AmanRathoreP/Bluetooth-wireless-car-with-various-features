@@ -328,6 +328,11 @@ void get_motor_directions_and_speed(short &motor_1_speed, bool &motor_1_terminal
     }
 
     motor_2_speed = motor_1_speed;
+
+    if (state && (motor_1_speed != 0))
+    {
+        __change_direction__(motor_1_terminal_1, motor_1_terminal_2, motor_2_terminal_1, motor_2_terminal_2);
+    }
 }
 void __terminal_value__(char direction_to_turn, bool &motor_1_terminal_1, bool &motor_1_terminal_2, bool &motor_2_terminal_1, bool &motor_2_terminal_2)
 {
