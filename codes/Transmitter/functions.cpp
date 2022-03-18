@@ -741,7 +741,28 @@ void GUI::menu_lock(Adafruit_PCD8544 lcd)
     lcd.print("Menu and car movement is locked please unlock it!");
     lcd.display();
 }
-void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info) { gui_info.gui_option_selected = 'm'; }
+void GUI::LineBalancing(GUI_info &gui_info, motor &motor_info)
+{
+    //  gui_info.gui_option_selected = 'm';
+    static bool state_when_came = (bool)gui_info.input_state;
+    gui_info.lcd.clearDisplay();
+    gui_info.lcd.setCursor(0, 1);
+        gui_info.lcd.setTextColor(0);
+gui_info.lcd.fillRect(0, 0,84,48, 1);
+    // int delay_time = 1000;
+    // delay(delay_time);
+
+    gui_info.lcd.println("    Work in      Progress!!");
+    gui_info.lcd.drawBitmap((gui_info.lcd.width() / 4) - 3, 0, image_work_in_progress, 48, 48, 0);
+    gui_info.lcd.display();
+    gui_info.lcd.clearDisplay();
+    gui_info.lcd.setTextColor(1);
+
+    if (gui_info.input_state != state_when_came)
+    { //* Joystick switch is pressed
+        gui_info.gui_option_selected = 'm';
+    }
+}
 
 void GUI::get_distance_away_from(int &right_distance, int &left_distance)
 {
@@ -774,6 +795,7 @@ void InterfaceSensor::get_distance(int &right_distance, int &left_distance)
 }
 void GUI::AvoidObstacle(GUI_info &gui_info)
 {
+    /*
     int right_distance = 0, left_distance = 0;
 
     get_distance_away_from(right_distance, left_distance);
@@ -807,6 +829,24 @@ void GUI::AvoidObstacle(GUI_info &gui_info)
     // gui_info.lcd.print("Left = ");
     // gui_info.lcd.println(left_distance);
     gui_info.lcd.display();
+    */
+
+    static bool state_when_came = (bool)gui_info.input_state;
+    gui_info.lcd.clearDisplay();
+    gui_info.lcd.setCursor(0, 1);
+
+    // int delay_time = 1000;
+    // delay(delay_time);
+
+    gui_info.lcd.println("    Work in      Progress!!");
+    gui_info.lcd.drawBitmap((gui_info.lcd.width() / 4) - 3, 0, image_work_in_progress, 48, 48, 1);
+    gui_info.lcd.display();
+    gui_info.lcd.clearDisplay();
+
+    if (gui_info.input_state != state_when_came)
+    { //* Joystick switch is pressed
+        gui_info.gui_option_selected = 'm';
+    }
 }
 
 Blutooth::Blutooth(int baud_rate)

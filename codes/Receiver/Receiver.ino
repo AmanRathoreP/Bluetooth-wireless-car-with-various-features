@@ -23,10 +23,10 @@ void setup()
     pinMode(motor_1_speed_pin, OUTPUT);
     pinMode(motor_2_speed_pin, OUTPUT);
 
-    pinMode(motor_1_terminal_1, OUTPUT);
-    pinMode(motor_1_terminal_2, OUTPUT);
-    pinMode(motor_2_terminal_1, OUTPUT);
-    pinMode(motor_2_terminal_2, OUTPUT);
+    pinMode(motor_1_terminal_1_pin, OUTPUT);
+    pinMode(motor_1_terminal_2_pin, OUTPUT);
+    pinMode(motor_2_terminal_1_pin, OUTPUT);
+    pinMode(motor_2_terminal_2_pin, OUTPUT);
 
     pinMode(state_pin, OUTPUT);
 

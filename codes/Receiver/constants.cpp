@@ -10,14 +10,14 @@ File Path ->     "C:/Google Drive/Electronics/MicroControllers/tp pratice/2022-0
 This is the constants file of the receiver
 */
 
-#define motor_1_speed_pin 9;
-#define motor_2_speed_pin 10;
-#define motor_1_terminal_1 2;
-#define motor_1_terminal_2 3;
-#define motor_2_terminal_1 4;
-#define motor_2_terminal_2 5;
+#define motor_1_speed_pin 9
+#define motor_2_speed_pin 10
+#define motor_1_terminal_1_pin 2
+#define motor_1_terminal_2_pin 3
+#define motor_2_terminal_1_pin 4
+#define motor_2_terminal_2_pin 5
 
-#define state_pin 12;
+#define state_pin 12
 
 struct motor
 {
