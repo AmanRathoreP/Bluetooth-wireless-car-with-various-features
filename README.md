@@ -4,8 +4,7 @@
 </div>
 
 <p align="center">
-  This is a RC car project but not a normal one it has various modes in it however not all the modes are available currently.
-  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/AmanRathoreP/Bluetooth-wireless-car-with-various-features/total">
+  This is a RC car project but not a normal one it has various modes in it however not all the modes are available currently.<br><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/AmanRathoreP/Bluetooth-wireless-car-with-various-features/total">
 </p>
 
 
