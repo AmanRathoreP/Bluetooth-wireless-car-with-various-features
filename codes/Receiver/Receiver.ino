@@ -18,12 +18,7 @@ bool state = 0; //* when 0 motor will not work
 String datas;
 void setup()
 {
-    Blutooth();
-
-    pinMode(trig_right, OUTPUT);
-    pinMode(echo_right, INPUT);
-    pinMode(trig_left, OUTPUT);
-    pinMode(echo_left, INPUT);
+    Blutooth(); //* init of "Blutooth" class
 
     pinMode(motor_1_speed_pin, OUTPUT);
     pinMode(motor_2_speed_pin, OUTPUT);
