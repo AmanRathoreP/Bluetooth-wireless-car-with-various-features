@@ -8,11 +8,6 @@
 </p>
 
 
-<!-- [![GitHub all releases](https://img.shields.io/github/downloads/AmanRathoreP/Bluetooth-wireless-car-with-various-features/total)](https://github.com/AmanRathoreP/Bluetooth-wireless-car-with-various-features/archive/refs/heads/master.zip) -->
-
-
-> **Note:** Some observations if you need them (optional).
-
 ## Features
 
 * [Nokia 5110 Display](https://www.adafruit.com/product/338)
